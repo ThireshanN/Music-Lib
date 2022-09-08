@@ -23,7 +23,7 @@ def create_app(test_config=None):
     app.config.from_object('config.Config')
     data_path = Path('music') / 'adapters' / 'data'
 
-<<<<<<< HEAD
+
     if test_config is not None:
         # Load test configuration, and override any configuration settings.
         app.config.from_mapping(test_config)
@@ -41,6 +41,6 @@ def create_app(test_config=None):
         app.register_blueprint(track_blueprint)
 
     return app
-=======
+
 #Testing first commit - In Repo without the github
->>>>>>> d213905ea60aeb400a998b08ddb6df6c73724aa5
+
