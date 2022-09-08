@@ -1,0 +1,19 @@
+{% extends 'layout.html' %} {% block content %}
+
+<div>
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>Title</th>
+    </tr>
+    {% for track in tracks %}
+    <tr>
+      <td>{{track.track_id}}</td>
+      <td>{{track.title}}</td>
+      <td>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

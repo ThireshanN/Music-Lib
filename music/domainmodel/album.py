@@ -1,5 +1,7 @@
-class Album:
+from __future__ import annotations
 
+
+class Album:
     def __init__(self, album_id: int, title: str):
         if type(album_id) is not int or album_id < 0:
             raise ValueError("Album ID should be a non negative integer!")
