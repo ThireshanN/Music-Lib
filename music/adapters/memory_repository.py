@@ -9,6 +9,8 @@ from bisect import bisect, bisect_left, insort_left
 from werkzeug.security import generate_password_hash
 
 from music.adapters.repository import AbstractRepository, RepositoryException
+from music.domainmodel.album import Album
+from music.domainmodel.artist import Artist
 from music.domainmodel.track import Track
 from music.adapters.csvdatareader import create_track_object, TrackCSVReader
 
@@ -24,6 +26,7 @@ class MemoryRepository(AbstractRepository):
             self.__track_index[track.track_id] = track
 
     def add_track(self, track: Track):
+
         self.__tracks.append(track)
         self.__track_index[track.track_id] = track
 
@@ -60,9 +63,34 @@ class MemoryRepository(AbstractRepository):
 def load_tracks(data_path: Path, repo: MemoryRepository):
     track_reader = TrackCSVReader(str(data_path / "raw_albums_excerpt.csv"), str(data_path / "raw_tracks_excerpt.csv"))
     tracks = track_reader.read_csv_files()
+    tracks1 = track_reader.read_tracks_file()
     #tracks is type list
-    for row in tracks:
-        repo.add_track(row)
+    for row in tracks1:
+        id = int(row["track_id"])
+        title = row['track_title']
+
+        new_track = Track(int(row["track_id"]), row['track_title'])
+        new_track.track_duration = int(float(row['track_duration']))
+        new_track.track_url = row['track_url']
+        try:
+            album_id = int(row['album_id'])
+        except ValueError:
+            album_id = 9999
+
+        try:
+            artist_id = int(row['artist_id'])
+        except ValueError:
+            artist_id = 9999
+
+        new_album = Album(album_id, row['album_title'])
+        new_artist = Artist(artist_id, row['artist_name'])
+
+        new_track.album = new_album
+        new_track.artist = new_artist
+
+        repo.add_track(new_track)
+
+
 
 
 def populate(data_path: Path, repo: MemoryRepository):
