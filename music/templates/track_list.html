@@ -1,8 +1,8 @@
 {% extends 'layout.html' %} {% block content %}
 
 <div>
-  <table>
-    <tr>
+  <table class="track_table">
+    <tr class="track_table_header">
       <th>ID</th>
       <th>Title</th>
       <th>Album</th>
@@ -11,8 +11,8 @@
       <th>Track URL</th>
 
     </tr>
-    {% for track in tracks %}
-    <tr>
+    {% for track in tracks_class %}
+    <tr class="track_table_row">
       <td>{{track.track_id}}</td>
       <td>{{track.title}}</td>
       <td>{{track.album.title}}</td>

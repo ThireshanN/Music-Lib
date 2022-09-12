@@ -4,6 +4,7 @@ from wtforms import IntegerField, SubmitField
 from wtforms.validators import DataRequired
 
 from music.adapters.repository import repo_instance
+from music.domainmodel.track import Track
 
 track_blueprint = Blueprint('track_blueprint', __name__)
 
@@ -16,8 +17,7 @@ def home():
 
 @track_blueprint.route('/tracks')
 def list_tracks():
-    # Task 5: Render the `people_list.html` template. It takes `people` as a variable.
-    return render_template('track_list.html', tracks=repo_instance)
+    return render_template('track_list.html', tracks_class=repo_instance)
 
 
 @track_blueprint.route('/find', methods=['GET', 'POST'])

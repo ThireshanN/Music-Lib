@@ -1,3 +1,28 @@
 h1 {
     color: darkblue;
 }
+
+
+
+tr:nth-child(even) {
+    border-style: solid;
+    border-spacing: 5;
+    border-color: black;
+    background-color: #e5e5e5;
+}
+
+.track_table {
+    border-style: solid;
+    border-spacing: 5;
+    text-align: centre;
+    margin: 1rem;
+}
+
+.track_table_header {
+    background-color: #e5e5e5;
+    text-align: left;
+}
+
+.track_table_row {
+    padding: 10px;
+}
