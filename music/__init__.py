@@ -16,9 +16,6 @@ def create_app(test_config=None):
     # Create the Flask app object.
     app = Flask(__name__)
 
-    csrf = CSRFProtect()
-    csrf.init_app(app)
-
     # Configure the app from configuration-file settings.
     app.config.from_object('config.Config')
     data_path = Path('music') / 'adapters' / 'data'
@@ -36,8 +33,14 @@ def create_app(test_config=None):
     # Build the application - these steps require an application context.
     with app.app_context():
         # Register blueprints.
-        from music.blueprints.track_blueprint import track_blueprint
-        app.register_blueprint(track_blueprint)
+        from .home import home
+        app.register_blueprint(home.home_blueprint)
+
+        from .tracks import tracks
+        app.register_blueprint(tracks.tracks_blueprint)
+
+        from .utilities import utilities
+        app.register_blueprint(utilities.utilities_blueprint)
 
     return app
 

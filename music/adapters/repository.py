@@ -21,12 +21,29 @@ class AbstractRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
+    def get_all_tracks(self) -> List[Track]:
+        raise NotImplementedError
+
+    @abc.abstractmethod
     def amount_of_tracks(self):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get_track_by_id(self, id):
+    def get_tracks_by_ids(self, random_ids):
         raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_first_tracks(self):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_last_tracks(self):
+        raise NotImplementedError
+
+
+
+
+
 
 
 

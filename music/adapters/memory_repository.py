@@ -16,31 +16,48 @@ from music.adapters.csvdatareader import create_track_object, TrackCSVReader
 
 
 class MemoryRepository(AbstractRepository):
-    # Articles ordered by date, not id. id is assumed unique.
-    def __init__(self, *args):
-        self.__tracks: List[Track]= []
+    # Tracks order by track_id,
+    def __init__(self):
+        self.__tracks: List[Track] = []
         self.__track_index = dict()
-        for track in args:
-
-            self.__tracks.append(track)
-            self.__track_index[track.track_id] = track
 
     def add_track(self, track: Track):
-
         self.__tracks.append(track)
         self.__track_index[track.track_id] = track
 
-    def get_track(self, track_id) -> Track:
-        return next((track for track in self.__tracks if track.track_id == track_id), None)
+    def get_track(self, track_id: int) -> Track:
+        track = None
+
+        try:
+            track = self.__track_index[track_id]
+        except KeyError:
+            pass
+
+        return track
+
+    def get_all_tracks(self) -> List[Track]:
+        return self.__tracks
+
+    def get_tracks_by_ids(self, id_list):
+        existing_ids = [id for id in id_list if id in self.__track_index]
+        tracks = [self.__track_index[id] for id in existing_ids]
+        return tracks
 
     def amount_of_tracks(self):
         return len(self.__tracks)
 
-    def get_track_by_id(self, id):
-        try:
-            return self.__track_index[id]
-        except KeyError:
-            return None
+    def get_first_tracks(self):
+        tracks = None
+        if len(self.__tracks) > 0:
+            return self.__tracks[0]
+        return tracks
+
+    def get_last_tracks(self):
+        tracks = None
+
+        if len(self.__tracks) > 0:
+            tracks = self.__tracks[-1]
+        return tracks
 
     def __iter__(self):
         self._current = 0
@@ -56,15 +73,11 @@ class MemoryRepository(AbstractRepository):
     def get(self, reference: int):
         return next((p for p in self.__tracks if p.track_id == reference), None)
 
-    def tracks_dict(self):
-        return self.__track_index
-
 
 def load_tracks(data_path: Path, repo: MemoryRepository):
     track_reader = TrackCSVReader(str(data_path / "raw_albums_excerpt.csv"), str(data_path / "raw_tracks_excerpt.csv"))
-    tracks = track_reader.read_csv_files()
     tracks1 = track_reader.read_tracks_file()
-    #tracks is type list
+    # tracks is type list
     for row in tracks1:
         id = int(row["track_id"])
         title = row['track_title']
@@ -91,9 +104,6 @@ def load_tracks(data_path: Path, repo: MemoryRepository):
         repo.add_track(new_track)
 
 
-
-
 def populate(data_path: Path, repo: MemoryRepository):
     # Load tracks into the repository.
     load_tracks(data_path, repo)
-
