@@ -41,23 +41,45 @@ class MemoryRepository(AbstractRepository):
     def get_tracks_by_ids(self, id_list):
         existing_ids = [id for id in id_list if id in self.__track_index]
         tracks = [self.__track_index[id] for id in existing_ids]
+
         return tracks
 
     def amount_of_tracks(self):
         return len(self.__tracks)
 
-    def get_first_tracks(self):
-        tracks = None
-        if len(self.__tracks) > 0:
-            return self.__tracks[0]
-        return tracks
+    def get_previous_track(self, track: Track):
+        prev_track = None
+        try:
+            index = self.track_index(track)
+            for stored_track in reversed(self.__tracks[0:index]):
+                if stored_track.track_id < track.track_id:
+                    prev_track = stored_track.track_id
+                    break
+        except ValueError:
+            print("mem repo get prev track")
+            pass
 
-    def get_last_tracks(self):
-        tracks = None
+        return prev_track
 
-        if len(self.__tracks) > 0:
-            tracks = self.__tracks[-1]
-        return tracks
+    def get_next_track(self, track: Track):
+        next_track = None
+        try:
+            index = self.track_index(track)
+            for stored_track in self.__tracks[index+1:len(self.__tracks)]:
+                if stored_track.track_id > track.track_id:
+                    next_track = stored_track.track_id
+                    break
+        except ValueError:
+            print("mem repo get next track")
+            pass
+
+        return next_track
+
+    def track_index(self, track: Track):
+        index = bisect_left(self.__tracks, track)
+        if index != len(self.__tracks) and self.__tracks[index].track_id == track.track_id:
+            return index
+        raise ValueError("in track index - mem repo")
 
     def __iter__(self):
         self._current = 0

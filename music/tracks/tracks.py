@@ -10,45 +10,35 @@ tracks_blueprint = Blueprint(
 
 @tracks_blueprint.route('/tracks', methods=["GET"])
 def list_tracks():
-    tracks_per_page = 10
-    id = request.args.get('id')
+    tracks_per_page = 13
     cursor = request.args.get('cursor')
 
     if cursor is None:
-        # No cursor query parameter, so initialise cursor to start at the beginning.
+
         cursor = 0
     else:
-        # Convert cursor from string to int.
-        cursor = int(cursor)
 
-    if id is None:
-        # No id query parameter, so initialise id to start at the beginning.
-        id = 2
-    else:
-        # Convert id from string to int.
-        id = int(id)
+        cursor = int(cursor)
 
     first_tracks_url = None
     last_tracks_url = None
     next_tracks_url = None
     prev_tracks_url = None
 
-    tracks = services.get_all_tracks(repo.repo_instance)  # gets all tracks in the repo
-    tracks = tracks[cursor:cursor+tracks_per_page]  # slices the tracks based on tracks_per_page
+    all_tracks, pre_track, next_track = services.get_all_tracks(repo.repo_instance)
+    tracks = all_tracks[cursor:cursor + tracks_per_page]
 
     if cursor > 0:
-        #prev_tracks_url = url_for('tracks_bp.tracks', cursor=cursor-tracks_per_page)
-        first_tracks_url = url_for('tracks_bp.tracks')
+        prev_tracks_url = url_for('tracks_bp.list_tracks', cursor=cursor - tracks_per_page)
+        first_tracks_url = url_for('tracks_bp.list_tracks')
+    if cursor + tracks_per_page < len(all_tracks):
+        next_tracks_url = url_for('tracks_bp.list_tracks', cursor=cursor + tracks_per_page)
 
-    if cursor + tracks_per_page < len(tracks):
-        next_tracks_url = url_for('tracks_bp.tracks',  cursor=cursor + tracks_per_page)
-
-        last_cursor = tracks_per_page * int(len(tracks) / tracks_per_page)
-        if len(tracks) % tracks_per_page == 0:
+        last_cursor = tracks_per_page * int(len(all_tracks) / tracks_per_page)
+        if len(all_tracks) % tracks_per_page == 0:
             last_cursor -= tracks_per_page
-        last_tracks_url = url_for('tracks_bp.tracks', cursor=last_cursor)
+        last_tracks_url = url_for('tracks_bp.list_tracks', cursor=last_cursor)
 
-    # Generate the webpage to display the articles.
     return render_template(
         'tracks/track_list.html',
         tracks=tracks,

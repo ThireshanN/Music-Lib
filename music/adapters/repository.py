@@ -33,12 +33,18 @@ class AbstractRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get_first_tracks(self):
+    def get_previous_track(self, track: Track):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get_last_tracks(self):
+    def get_next_track(self, track: Track):
         raise NotImplementedError
+
+    @abc.abstractmethod
+    def track_index(self, track: Track):
+        raise NotImplementedError
+
+
 
 
 

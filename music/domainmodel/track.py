@@ -8,7 +8,7 @@ from music.domainmodel.album import Album
 class Track:
     def __init__(self, track_id: int, track_title: str):
         if type(track_id) is not int or track_id < 0:
-            raise ValueError
+            raise ValueError("ID is not the right value type")
         self.__track_id = track_id
 
         self.__title = None
