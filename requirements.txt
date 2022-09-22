@@ -4,3 +4,4 @@ Flask-WTF
 python-dotenv
 password-validator==1.0
 better-profanity==0.7.0
+flask-wtf==0.15.0

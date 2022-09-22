@@ -1,6 +1,7 @@
 from typing import Iterable
 
 from music.adapters.repository import AbstractRepository
+from music.domainmodel.review import Review
 from music.domainmodel.track import Track
 
 
@@ -61,5 +62,40 @@ def get_all_tracks(repo: AbstractRepository):
     #return repo.get_all_tracks()
 
 
+
 def tracks_to_dict(tracks: Iterable[Track]):
     return [track_to_dict(track) for track in tracks]
+
+
+def get_albums(album_id, repo: AbstractRepository):
+    album_id = int(album_id)
+    albums_index_dict, albums_to_tracks = repo.get_album_collective()
+    if album_id not in albums_index_dict:
+        return None, None
+    album = albums_index_dict[album_id]
+    list_of_tracks = albums_to_tracks[album_id]
+    return album, list_of_tracks
+
+
+def get_artists(artist_id, repo: AbstractRepository):
+    artist_id = int(artist_id)
+    artist_index_dict, artist_to_tracks = repo.get_artist_collective()
+    if artist_id not in artist_index_dict:
+        return None, None
+    artist = artist_index_dict[artist_id]
+    list_of_tracks = artist_to_tracks[artist_id]
+    return artist, list_of_tracks
+
+
+def get_genre(genre_id, repo: AbstractRepository):
+    genre_id = int(genre_id)
+    genre_index_dict, genre_to_tracks = repo.get_genre_collective()
+    if genre_id not in genre_index_dict:
+        return None, None
+    genre = genre_index_dict[genre_id]
+    list_of_tracks = genre_to_tracks[genre_id]
+    return genre, list_of_tracks
+
+
+
+

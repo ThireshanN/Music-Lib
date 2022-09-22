@@ -1,3 +1,5 @@
+from bisect import bisect_left
+
 from flask import Blueprint, url_for
 
 from music.utilities import services
@@ -14,3 +16,11 @@ def get_selected_tracks(quantity=15):
     for track in tracks:
         track['hyperlink'] = url_for('news_bp.articles_by_date', id=track['track_id'].isoformat())
     return tracks
+
+
+def track_index_subclass(track1, track_list):
+    index1 = bisect_left(track_list, track1)
+    if index1 != len(track_list) and track_list[index1] == track1:
+        return index1
+    raise ValueError("in track index - mem repo")
+
