@@ -144,10 +144,6 @@ class MemoryRepository(AbstractRepository):
         if index != len(self.__tracks) and self.__tracks[index].track_id == track.track_id:
             return index
 
-
-
-
-
     def __iter__(self):
         self._current = 0
         return self
