@@ -1,5 +1,5 @@
 {% extends 'layout.html' %} {% block content %}
-
+<!--
 <div>
   <h2>Showing Results: </h2>
     <table class="track_table">
@@ -25,5 +25,20 @@
     </table>
 
 </div>
+<<<<<<< HEAD
 {% endblock %}
 
+=======
+-->
+<header >
+    <h1> Search Results </h1>
+  <h3 class = "table_details"> All tracks of {{ type }}, {{ name_type }} ({{ type }}ID: {{ id }}) </h3>
+
+</header>
+
+<div>
+      {% include 'table.html' %}
+</div>
+
+{% endblock %}
+>>>>>>> c6f035ea3ffd1a7cabb8004e8a65916a2e33557f

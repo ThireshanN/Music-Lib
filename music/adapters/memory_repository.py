@@ -1,3 +1,4 @@
+import ast
 import csv
 from abc import ABC
 from pathlib import Path
@@ -12,6 +13,8 @@ from music.adapters.repository import AbstractRepository, RepositoryException
 from music.domainmodel.album import Album
 from music.domainmodel.artist import Artist
 from music.domainmodel.track import Track
+from music.domainmodel.user import User
+from music.domainmodel.genre import Genre
 from music.adapters.csvdatareader import create_track_object, TrackCSVReader
 
 
@@ -20,6 +23,68 @@ class MemoryRepository(AbstractRepository):
     def __init__(self):
         self.__tracks: List[Track] = []
         self.__track_index = dict()
+        self.__artist_index = dict()
+        self.__album_index = dict()
+        self.__genre_index = dict()
+        self.__users = []
+        self.__artist_to_track_dic = dict()
+        self.__album_to_track_dic = dict()
+        self.__genre_to_track_dic = dict()
+        self.__track_to_review = dict()
+
+
+    def get_review(self):
+        return self.__track_to_review
+
+    def post_review(self, review):
+        k = review.track.track_id
+        if k in self.__track_to_review:
+            self.__track_to_review[k].append(review)
+        else:
+            self.__track_to_review[k] = [review]
+
+
+    def get_all_users(self):
+        return self.__users
+
+    def get_genre_collective(self):
+        return self.__genre_index, self.__genre_to_track_dic
+
+    def get_artist_collective(self):
+        return self.__artist_index, self.__artist_to_track_dic
+
+    def get_album_collective(self):
+        return self.__album_index, self.__album_to_track_dic
+
+    def add_genre(self, genre: Genre, track: Track):
+        if genre.genre_id in self.__genre_to_track_dic:
+            self.__genre_to_track_dic[genre.genre_id].append(track)
+        else:
+            self.__genre_to_track_dic[genre.genre_id] = [track]
+        self.__genre_index[genre.genre_id] = genre
+
+    def add_artist(self, artist: Artist, track: Track):
+        if artist.artist_id in self.__artist_to_track_dic:
+            self.__artist_to_track_dic[artist.artist_id].append(track)
+        else:
+            self.__artist_to_track_dic[artist.artist_id] = [track]
+        self.__artist_index[artist.artist_id] = artist
+
+    def add_album(self, album: Album, track: Track):
+        if album.album_id in self.__album_to_track_dic:
+            self.__album_to_track_dic[album.album_id].append(track)
+        else:
+            self.__album_to_track_dic[album.album_id] = [track]
+        self.__album_index[album.album_id] = album
+
+    def add_user(self, user: User):
+        self.__users.append(user)
+
+    def get_user_id(self, userid) -> User:
+        return next((user for user in self.__users if user.user_id == userid), None)
+
+    def get_user(self, user_name) -> User:
+        return next((user for user in self.__users if user.user_name == user_name), None)
 
     def add_track(self, track: Track):
         self.__tracks.append(track)
@@ -73,10 +138,15 @@ class MemoryRepository(AbstractRepository):
 
         return next_track
 
+
     def track_index(self, track: Track):
         index = bisect_left(self.__tracks, track)
         if index != len(self.__tracks) and self.__tracks[index].track_id == track.track_id:
             return index
+
+
+
+
 
     def __iter__(self):
         self._current = 0
@@ -120,6 +190,19 @@ def load_tracks(data_path: Path, repo: MemoryRepository):
         new_track.album = new_album
         new_track.artist = new_artist
 
+        genres = row["track_genres"]
+        if len(genres) > 0:
+            genres = ast.literal_eval(genres)
+            # print("Test5")
+            for genre in genres:
+                genre_id = int(genre["genre_id"])
+                genre_title = genre["genre_title"]
+                # genre_url = genre["genre_url"]
+                genre = Genre(genre_id, genre_title)
+                new_track.add_genre(genre)
+                repo.add_genre(genre, new_track)
+        repo.add_album(new_album, new_track)
+        repo.add_artist(new_artist, new_track)
         repo.add_track(new_track)
 
 

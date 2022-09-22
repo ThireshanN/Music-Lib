@@ -5,6 +5,8 @@ from music.adapters.repository import AbstractRepository
 from music.domainmodel.track import Track
 
 
+
+
 def get_random_tracks(quantity, repo: AbstractRepository):
     track_count = repo.amount_of_tracks()
 
@@ -33,3 +35,6 @@ def track_to_dict(track: Track):
 
 def tracks_to_dict(tracks: Iterable[Track]):
     return [track_to_dict(track) for track in tracks]
+
+
+

@@ -1,0 +1,37 @@
+{% extends 'layout.html' %} {% block content %}
+
+<header >
+    <h1> Comments for the Track "{{ track_name }}" (TrackID:{{ track_id }})  </h1>
+  <h3> Add a comment and rating </h3>
+</header>
+
+<div>
+  <form method="POST" action="{{ handler_url }}">
+    {{ form.csrf_token }}
+    <div> {{ form.rating.label }} </br> {{ form.rating }}</div>
+    <div class="form-wrapper">
+            <form action="{{handler_url}}" method="post">
+                {{form.track_id}} <!-- Need to include this hidden field as it tracks the article being commented. -->
+                {{form.csrf_token}} <!-- Need to include this token - Flask WTForms requires it. -->
+                <br>
+                <div class ="form-field">{{form.comment.label}} </br>{{form.comment(size = 100, placeholder="type your comment", class="textarea", cols="50", rows="6", wrap="hard")}}
+                    {% if form.comment.errors %}
+                        <ul class="errors">
+        	            {% for error in form.comment.errors %}
+        		            <li>{{error}}</li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+                {{ form.submit }}
+            </form>
+        </div>
+    <!--{{ form.submit }} -->
+  </form>
+</div>
+
+<div>
+      {% include 'comments_table.html' %}
+</div>
+
+{% endblock %}

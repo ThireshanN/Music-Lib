@@ -1,7 +1,11 @@
 import abc
 from typing import List
 
+from music.domainmodel.album import Album
+from music.domainmodel.artist import Artist
+from music.domainmodel.genre import Genre
 from music.domainmodel.track import Track
+from music.domainmodel.user import User
 
 repo_instance = None
 
@@ -12,6 +16,55 @@ class RepositoryException(Exception):
 
 
 class AbstractRepository(abc.ABC):
+
+    @abc.abstractmethod
+    def post_review(self, review):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_review(self):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_artist_collective(self):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_album_collective(self):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_genre_collective(self):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def add_album(self, album: Album, track: Track):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def add_artist(self, artist: Artist, track: Track):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def add_genre(self, genre: Genre, track: Track):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def add_user(self, user: User):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_all_users(self) -> List[User]:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_user_id(self, userid) -> User:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_user(self, user_name) -> User:
+        raise NotImplementedError
+
     @abc.abstractmethod
     def add_track(self, track: Track):
         raise NotImplementedError

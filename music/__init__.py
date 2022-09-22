@@ -45,6 +45,12 @@ def create_app(test_config=None):
         from .utilities import utilities
         app.register_blueprint(utilities.utilities_blueprint)
 
+        from .authentication import authentication
+        app.register_blueprint(authentication.authentication_blueprint)
+
+        from .comments import comments
+        app.register_blueprint(comments.comments_blueprint)
+
     return app
 
 

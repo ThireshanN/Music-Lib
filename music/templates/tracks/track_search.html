@@ -1,8 +1,14 @@
 {% extends 'layout.html' %} {% block content %}
 
+<header >
+    <h1> Search </h1>
+  <h3> Search by ArtistID/GenreID/AlbumID </h3>
+</header>
+
 <div>
   <form method="POST" action="{{ handler_url }}" style="margin: auto; width: 220px;">
     {{ form.csrf_token }}
+    <div>{{ form.type.label }} {{ form.type }}</div>
     <div>{{ form.id.label }} {{ form.id }}</div>
     {{ form.submit }}
   </form>
