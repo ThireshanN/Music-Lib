@@ -22,14 +22,13 @@
     {% if tracks is not none %}
     <table class="track_table">
       <tr class="track_table_header">
-        <th>User</th>
         <th>Rating</th>
         <th>Comment</th>
 
       </tr>
       {% for track in tracks %}
       <tr class="track_table_row">
-        <td>{{track.username}}</td>
+
         <td>{{track.rating}}</td>
         <td>{{track.review_text}}</td>
         <td>

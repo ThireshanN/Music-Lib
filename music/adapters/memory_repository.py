@@ -147,10 +147,6 @@ class MemoryRepository(AbstractRepository):
             return index
         raise ValueError("in track index - mem repo")
 
-
-
-
-
     def __iter__(self):
         self._current = 0
         return self

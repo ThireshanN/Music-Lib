@@ -4,7 +4,7 @@ from music.domainmodel.track import Track
 
 class Review:
 
-    def __init__(self, track: Track, review_text: str, rating: int, username: str):
+    def __init__(self, track: Track, review_text: str, rating: int):
         self.__track = None
         if isinstance(track, Track):
             self.__track = track
@@ -19,11 +19,6 @@ class Review:
             raise ValueError('Invalid value for the rating.')
 
         self.__timestamp = datetime.now()
-        self.__username = username
-
-    @property
-    def username(self) -> str:
-        return self.__username
 
     @property
     def track(self) -> Track:

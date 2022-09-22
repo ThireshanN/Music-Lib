@@ -29,11 +29,11 @@ comments_blueprint = Blueprint(
 @login_required
 def comment_on_article():
     # Obtain the user name of the currently logged in user.
-    user_name = session['user_name']
+    #user_name = session['user_name']
     track_id = request.args.get('track')
     print(track_id)
     print(type(track_id))
-    print(user_name)
+    #print(user_name)
     # Create form. The form maintains state, e.g. when this method is called with a HTTP GET request and populates
     # the form with an article id, when subsequently called with a HTTP POST request, the article id remains in the
     # form.
@@ -45,7 +45,7 @@ def comment_on_article():
         print("test3")
         print(form.track_id.data)
         # Use the service layer to store the new comment.
-        services.add_comment(int(form.track_id.data), form.comment.data, int(form.rating.data), user_name, repo.repo_instance)
+        services.add_comment(int(form.track_id.data), form.comment.data, int(form.rating.data),  repo.repo_instance)
         print("test4")
         # Cause the web browser to display the page of all articles that have the same date as the commented article,
         # and display all comments, including the new comment.
