@@ -16,6 +16,9 @@ def create_app(test_config=None):
     # Create the Flask app object.
     app = Flask(__name__)
 
+    csrf = CSRFProtect()
+    csrf.init_app(app)
+
     # Configure the app from configuration-file settings.
     app.config.from_object('config.Config')
     data_path = Path('music') / 'adapters' / 'data'

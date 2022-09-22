@@ -8,10 +8,13 @@
     }}>
   </head>
   <body>
+  <div id="menu">
     <nav>
       <a href={{ url_for("home_bp.home") }}>Home</a>
       <a href={{ url_for("tracks_bp.list_tracks") }}>Tracks</a>
+      <a href={{ url_for("tracks_bp.find_albums") }}>Search Tracks</a>
     </nav>
+  </div>
     <h1>Music Library</h1>
     <main>{% block content %} {% endblock %}</main>
   </body>

@@ -31,7 +31,7 @@ class MemoryRepository(AbstractRepository):
         try:
             track = self.__track_index[track_id]
         except KeyError:
-            pass
+            return None
 
         return track
 
@@ -56,7 +56,6 @@ class MemoryRepository(AbstractRepository):
                     prev_track = stored_track.track_id
                     break
         except ValueError:
-            print("mem repo get prev track")
             pass
 
         return prev_track
@@ -70,7 +69,6 @@ class MemoryRepository(AbstractRepository):
                     next_track = stored_track.track_id
                     break
         except ValueError:
-            print("mem repo get next track")
             pass
 
         return next_track
@@ -79,7 +77,6 @@ class MemoryRepository(AbstractRepository):
         index = bisect_left(self.__tracks, track)
         if index != len(self.__tracks) and self.__tracks[index].track_id == track.track_id:
             return index
-        raise ValueError("in track index - mem repo")
 
     def __iter__(self):
         self._current = 0

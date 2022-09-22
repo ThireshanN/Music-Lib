@@ -11,7 +11,7 @@ class NonExistentTrackException(Exception):
 def get_track_by_id(track_id: int, repo: AbstractRepository):
     track = repo.get_track(track_id)
     if track is None:
-        raise NonExistentTrackException
+        return None
     else:
         return track
 
