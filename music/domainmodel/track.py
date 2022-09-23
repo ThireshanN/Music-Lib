@@ -21,10 +21,19 @@ class Track:
         # duration in seconds
         self.__track_duration: int | None = None
         self.__genres: list = []
+        self.__song_url: str | None = None
 
     @property
     def track_id(self) -> int:
         return self.__track_id
+
+    def set_song_url(self, url):
+        pre = "https://files.freemusicarchive.org/storage-freemusicarchive-org/"
+        self.__song_url = pre+url
+
+    @property
+    def song_url(self) -> str:
+        return self.__song_url
 
     @property
     def title(self) -> str:

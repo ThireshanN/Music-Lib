@@ -52,7 +52,7 @@
         <td>{{track.track_duration}}</td>
         <td><a href={{track.track_url}}>Visit URL</a></td>
         <td><a href={{ url_for('comments_bp.comment_on_article', track=track.track_id) }}>Comment</a></td>
-        <td><a href={{ url_for("tracks_bp.list_tracks") }}>Add To Favourites</a></td>
+        <td><a href={{ url_for("tracks_bp.playlist", add=track.track_id) }}>Add To Favourites</a></td>
         <td>
         </td>
       </tr>

@@ -6,6 +6,9 @@ class PlayList:
     def __init__(self):
         self.__list_of_tracks = []
 
+    def get_all_tracks(self):
+        return self.__list_of_tracks
+
     def size(self):
         size_playlist = len(self.__list_of_tracks)
         if size_playlist > 0:

@@ -15,6 +15,7 @@ from music.domainmodel.artist import Artist
 from music.domainmodel.track import Track
 from music.domainmodel.user import User
 from music.domainmodel.genre import Genre
+from music.domainmodel.playlist import PlayList
 from music.adapters.csvdatareader import create_track_object, TrackCSVReader
 
 
@@ -30,6 +31,16 @@ class MemoryRepository(AbstractRepository):
         self.__album_to_track_dic = dict()
         self.__genre_to_track_dic = dict()
         self.__track_to_review = dict()
+        self.__playlist = PlayList()
+
+    def get_playlist_tracks(self):
+        return self.__playlist.get_all_tracks()
+
+    def delete_from_playlist(self, track):
+        self.__playlist.remove_track(track)
+
+    def add_to_playlist(self, track):
+        self.__playlist.add_track(track)
 
     def get_review(self):
         return self.__track_to_review
@@ -182,6 +193,7 @@ def load_tracks(data_path: Path, repo: MemoryRepository):
         new_track = Track(int(row["track_id"]), row['track_title'])
         new_track.track_duration = int(float(row['track_duration']))
         new_track.track_url = row['track_url']
+        new_track.set_song_url(row['track_file'])
         try:
             album_id = int(row['album_id'])
         except ValueError:

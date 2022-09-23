@@ -22,6 +22,7 @@
       {% endif %}
       <a href={{ url_for("tracks_bp.list_tracks") }}>Tracks  |</a>
       <a href={{ url_for("tracks_bp.find_person") }}>Search  |</a>
+      <a href={{ url_for("tracks_bp.playlist") }}>Favourites  |</a>
       {% if 'user_name' in session %}
         <a id = "form_style" href={{ url_for("authentication_bp.logout") }}>Logout</a>
       {% else %}

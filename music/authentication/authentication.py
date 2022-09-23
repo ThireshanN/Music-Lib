@@ -112,7 +112,7 @@ class PasswordValid:
     def __init__(self, message=None):
         if not message:
             message = u'Your password must be at least 8 characters, and contain an upper case letter,\
-            a lower case letter and a digit'
+            a lower case letter and a digit test1'
         self.message = message
 
     def __call__(self, form, field):

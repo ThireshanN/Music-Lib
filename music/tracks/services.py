@@ -94,3 +94,15 @@ def get_genre(genre_id, repo: AbstractRepository):
     genre = genre_index_dict[genre_id]
     list_of_tracks = genre_to_tracks[genre_id]
     return genre, list_of_tracks
+
+
+def add_to_playlist(track, repo: AbstractRepository):
+    repo.add_to_playlist(track)
+
+
+def delete_from_playlist(track, repo: AbstractRepository):
+    repo.delete_from_playlist(track)
+
+
+def get_playlist_tracks(repo: AbstractRepository):
+    return repo.get_playlist_tracks()

@@ -233,3 +233,75 @@ class SearchForm(FlaskForm):
     search = StringField('')
 
 '''
+
+
+@tracks_blueprint.route('/favourites')
+#@login_required
+def playlist():
+    add_track_id = request.args.get('add')
+    delete_track_id = request.args.get('del')
+
+    if add_track_id is not None:
+        track = services.get_track_by_id(int(add_track_id), repo.repo_instance)
+        #print(track.song_url)
+        services.add_to_playlist(track, repo.repo_instance)
+
+    if delete_track_id is not None:
+        track = services.get_track_by_id(int(delete_track_id), repo.repo_instance)
+        services.delete_from_playlist(track, repo.repo_instance)
+
+    tracks = services.get_playlist_tracks(repo.repo_instance)
+
+    if len(tracks) <= 0:
+        curr_iter_tracks = None
+        prev_tracks_url = None
+        next_tracks_url = None
+    else:
+        track = tracks[0]
+
+        tracks_per_page = 1
+        cursor = request.args.get('cursor')
+
+        if cursor is None:
+            cursor = 0
+        else:
+            cursor = int(cursor)
+
+        next_tracks_url = None
+        prev_tracks_url = None
+
+        prev_track = next_track = None
+        if len(tracks) > 0:
+            try:
+                index = track_index_subclass(track, tracks)
+                for stored_track in reversed(tracks[0:index]):
+                    if stored_track.track_id < track.track_id:
+                        prev_track = stored_track.track_id
+                        break
+            except ValueError:
+                print("mem repo get prev track")
+                pass
+
+            try:
+                index = track_index_subclass(track, tracks)
+                for stored_track in tracks[index + 1:len(tracks)]:
+                    if stored_track.track_id > track.track_id:
+                        next_track = stored_track.track_id
+                        break
+            except ValueError:
+                print("mem repo get next track")
+                pass
+        print(len(tracks))
+        curr_iter_tracks = tracks[cursor:cursor + tracks_per_page]
+
+        if cursor > 0:
+            prev_tracks_url = url_for('tracks_bp.playlist', cursor=cursor - tracks_per_page)
+        if cursor + tracks_per_page < len(tracks):
+            next_tracks_url = url_for('tracks_bp.playlist', cursor=cursor + tracks_per_page)
+    #print(curr_iter_tracks)
+    return render_template(
+        'playlist.html',
+        tracks=curr_iter_tracks,
+        prev_tracks_url = prev_tracks_url,
+        next_tracks_url=next_tracks_url
+    )

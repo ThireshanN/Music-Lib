@@ -18,6 +18,18 @@ class RepositoryException(Exception):
 class AbstractRepository(abc.ABC):
 
     @abc.abstractmethod
+    def add_to_playlist(self, track):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_playlist_tracks(self):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def delete_from_playlist(self, track):
+        raise NotImplementedError
+
+    @abc.abstractmethod
     def post_review(self, review):
         raise NotImplementedError
 
