@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 from flask import Blueprint, request, url_for, render_template
 from flask_wtf import FlaskForm
 from werkzeug.utils import redirect
@@ -7,7 +7,7 @@ from wtforms.validators import DataRequired
 
 from music.domainmodel.track import Track
 from music.tracks import services
-=======
+
 from flask import Blueprint, redirect, render_template, url_for, request
 from flask_wtf import FlaskForm
 from wtforms import IntegerField, SubmitField, SelectField, StringField, HiddenField, TextAreaField
@@ -26,7 +26,6 @@ from wtforms import TextAreaField, HiddenField, SubmitField
 from wtforms.validators import DataRequired, Length, ValidationError
 from music.authentication.authentication import login_required
 
->>>>>>> c6f035ea3ffd1a7cabb8004e8a65916a2e33557f
 import music.adapters.repository as repo
 from music.domainmodel.track import Track
 from music.tracks import services
@@ -76,7 +75,6 @@ def list_tracks():
         first_tracks_url=first_tracks_url
     )
 
-<<<<<<< HEAD
 
 @tracks_blueprint.route("/track/<int:track_id>")
 def track_view(track_id):
@@ -113,7 +111,6 @@ class SearchForm(FlaskForm):
     # Task 6: Define the variables below using IntegerField and SubmitField
     id = IntegerField("Enter Album Title", [DataRequired()])
     submit = SubmitField("Search")
-=======
 '''
 @tracks_blueprint.route('/filtered')
 def person_view():
@@ -282,4 +279,4 @@ class SearchForm(FlaskForm):
     search = StringField('')
 
 '''
->>>>>>> c6f035ea3ffd1a7cabb8004e8a65916a2e33557f
+
