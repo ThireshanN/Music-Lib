@@ -51,7 +51,7 @@ def test_authentication_with_invalid_credentials(in_memory_repo):
     auth_services.add_user(new_user_name, new_password, in_memory_repo)
 
     with pytest.raises(auth_services.AuthenticationException):
-        auth_services.authenticate_user(new_user_name, new_password, in_memory_repo)
+        auth_services.authenticate_user(new_user_name, "abcd1A2312", in_memory_repo)
 
 
 def test_get_first_track(in_memory_repo):

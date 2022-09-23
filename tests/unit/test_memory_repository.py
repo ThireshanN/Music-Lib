@@ -5,6 +5,7 @@ import pytest
 from music.adapters.repository import RepositoryException
 from music.domainmodel.genre import Genre
 from music.domainmodel.track import Track
+from music.domainmodel.user import User
 
 
 def test_repository_can_get_track(in_memory_repo):
@@ -48,6 +49,17 @@ def test_get_prev_track(in_memory_repo):
     assert prev_track == expected_track.track_id
 
 
+def test_get_user_by_username(in_memory_repo):
+    user = User(1, "tester", "password")
+    in_memory_repo.add_user(user)
+    test_user = in_memory_repo.get_user("tester")
+
+    assert user == test_user
 
 
+def test_get_user_by_invalid_username(in_memory_repo):
+    user = User(1, "tester", "password")
+    in_memory_repo.add_user(user)
+    test_user = in_memory_repo.get_user("incorrect")
 
+    assert test_user is None
