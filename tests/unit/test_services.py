@@ -9,8 +9,8 @@ from music.comments import services as comment_services
 
 
 def test_can_add_user(in_memory_repo):
-    new_user_name = "tom"
-    new_password = "Tomfretwell@30"
+    new_user_name = "jz"
+    new_password = "abcd1A23"
 
     auth_services.add_user(new_user_name, new_password, in_memory_repo)
 
@@ -21,7 +21,7 @@ def test_can_add_user(in_memory_repo):
 
 
 def test_cannot_add_user_with_existing_name(in_memory_repo):  # user not being added
-    user_name = 'tom'
+    user_name = 'thorke'
     password = 'abcd1A23'
 
     with pytest.raises(auth_services.NameNotUniqueException):

@@ -142,7 +142,7 @@ class MemoryRepository(AbstractRepository):
         next_track = None
         try:
             index = self.track_index(track)
-            for stored_track in self.__tracks[index+1:len(self.__tracks)]:
+            for stored_track in self.__tracks[index + 1:len(self.__tracks)]:
                 if stored_track.track_id > track.track_id:
                     next_track = stored_track.track_id
                     break
@@ -151,7 +151,6 @@ class MemoryRepository(AbstractRepository):
             pass
 
         return next_track
-
 
     def track_index(self, track: Track):
         index = bisect_left(self.__tracks, track)
