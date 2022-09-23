@@ -147,7 +147,6 @@ class MemoryRepository(AbstractRepository):
                     next_track = stored_track.track_id
                     break
         except ValueError:
-            print("mem repo get next track")
             pass
 
         return next_track

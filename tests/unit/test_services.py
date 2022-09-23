@@ -1,6 +1,6 @@
 import pytest
 
-from music.authentication.services import AuthenticationException
+from music.authentication.services import AuthenticationException, NameNotUniqueException
 from music.authentication import services as auth_services
 from music.tracks.services import NonExistentTrackException
 from music.tracks import services as track_services
@@ -23,9 +23,13 @@ def test_can_add_user(in_memory_repo):
 def test_cannot_add_user_with_existing_name(in_memory_repo):  # user not being added
     user_name = 'thorke'
     password = 'abcd1A23'
+    auth_services.add_user(user_name, password, in_memory_repo)
 
-    with pytest.raises(auth_services.NameNotUniqueException):
+    try:
         auth_services.add_user(user_name, password, in_memory_repo)
+    except NameNotUniqueException:
+        assert True
+
 
 
 def test_authentication_with_valid_credentials(in_memory_repo):
@@ -47,7 +51,7 @@ def test_authentication_with_invalid_credentials(in_memory_repo):
     auth_services.add_user(new_user_name, new_password, in_memory_repo)
 
     with pytest.raises(auth_services.AuthenticationException):
-        auth_services.authenticate_user(new_user_name, '0987654321', in_memory_repo)
+        auth_services.authenticate_user(new_user_name, new_password, in_memory_repo)
 
 
 def test_get_first_track(in_memory_repo):
