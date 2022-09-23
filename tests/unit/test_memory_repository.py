@@ -34,8 +34,6 @@ def test_repository_get_next_track(in_memory_repo):
 
 def test_repository_get_track_amount(in_memory_repo):
     tracks = in_memory_repo.amount_of_tracks()
-
     assert tracks == 2000
-
     assert tracks == 2000
 

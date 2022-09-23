@@ -16,7 +16,8 @@ def get_track_by_id(track_id: int, repo: AbstractRepository):
     else:
         return track
 
-def add_comment(track_id, comment, rating , repo: AbstractRepository):
+
+def add_comment(track_id, comment, rating, repo: AbstractRepository):
     track = get_track_by_id(track_id, repo)
     review = Review(track, comment, rating)
     repo.post_review(review)

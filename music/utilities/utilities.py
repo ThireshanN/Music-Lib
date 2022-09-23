@@ -23,4 +23,3 @@ def track_index_subclass(track1, track_list):
     if index1 != len(track_list) and track_list[index1] == track1:
         return index1
     raise ValueError("in track index - mem repo")
-

@@ -97,6 +97,15 @@ class AbstractRepository(abc.ABC):
     def track_index(self, track: Track):
         raise NotImplementedError
 
+    @abc.abstractmethod
+    def get_first_track(self) -> Track:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_last_track(self) -> Track:
+        raise NotImplementedError
+
+
 
 
 

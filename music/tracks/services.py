@@ -12,19 +12,19 @@ class NonExistentTrackException(Exception):
 def get_track_by_id(track_id: int, repo: AbstractRepository):
     track = repo.get_track(track_id)
     if track is None:
-        return None
+        raise NonExistentTrackException
     else:
         return track
 
 
-def get_first_tracks(repo: AbstractRepository):
-    tracks = repo.get_first_tracks()
-    return tracks_to_dict(tracks)
-
-
 def get_last_track(repo: AbstractRepository):
-    tracks = repo.get_last_tracks()
-    return tracks_to_dict(tracks)
+    tracks = repo.get_last_track()
+    return track_to_dict(tracks)
+
+
+def get_first_track(repo: AbstractRepository):
+    track = repo.get_first_track()
+    return track_to_dict(track)
 
 
 def get_tracks(repo: AbstractRepository):
@@ -59,8 +59,7 @@ def get_all_tracks(repo: AbstractRepository):
         next_track = repo.get_next_track(all_tracks[0])
 
     return all_tracks, prev_tracks, next_track
-    #return repo.get_all_tracks()
-
+    # return repo.get_all_tracks()
 
 
 def tracks_to_dict(tracks: Iterable[Track]):
@@ -95,7 +94,3 @@ def get_genre(genre_id, repo: AbstractRepository):
     genre = genre_index_dict[genre_id]
     list_of_tracks = genre_to_tracks[genre_id]
     return genre, list_of_tracks
-
-
-
-

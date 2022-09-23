@@ -19,7 +19,6 @@ from music.adapters.csvdatareader import create_track_object, TrackCSVReader
 
 
 class MemoryRepository(AbstractRepository):
-    # Tracks order by track_id,
     def __init__(self):
         self.__tracks: List[Track] = []
         self.__track_index = dict()
@@ -32,7 +31,6 @@ class MemoryRepository(AbstractRepository):
         self.__genre_to_track_dic = dict()
         self.__track_to_review = dict()
 
-
     def get_review(self):
         return self.__track_to_review
 
@@ -42,7 +40,6 @@ class MemoryRepository(AbstractRepository):
             self.__track_to_review[k].append(review)
         else:
             self.__track_to_review[k] = [review]
-
 
     def get_all_users(self):
         return self.__users
@@ -96,7 +93,7 @@ class MemoryRepository(AbstractRepository):
         try:
             track = self.__track_index[track_id]
         except KeyError:
-            return None
+            pass
 
         return track
 
@@ -112,6 +109,21 @@ class MemoryRepository(AbstractRepository):
     def amount_of_tracks(self):
         return len(self.__tracks)
 
+    def get_first_track(self):
+        track = None
+
+        if len(self.__tracks) > 0:
+            track = self.__tracks[0]
+        return track
+
+    def get_last_track(self):
+        track = None
+
+        if len(self.__tracks) > 0:
+            track = self.__tracks[-1]
+
+        return track
+
     def get_previous_track(self, track: Track):
         prev_track = None
         try:
@@ -121,6 +133,7 @@ class MemoryRepository(AbstractRepository):
                     prev_track = stored_track.track_id
                     break
         except ValueError:
+            print("mem repo get prev track")
             pass
 
         return prev_track
@@ -134,6 +147,7 @@ class MemoryRepository(AbstractRepository):
                     next_track = stored_track.track_id
                     break
         except ValueError:
+            print("mem repo get next track")
             pass
 
         return next_track
@@ -143,6 +157,7 @@ class MemoryRepository(AbstractRepository):
         index = bisect_left(self.__tracks, track)
         if index != len(self.__tracks) and self.__tracks[index].track_id == track.track_id:
             return index
+        raise ValueError("in track index - mem repo")
 
     def __iter__(self):
         self._current = 0
@@ -162,7 +177,6 @@ class MemoryRepository(AbstractRepository):
 def load_tracks(data_path: Path, repo: MemoryRepository):
     track_reader = TrackCSVReader(str(data_path / "raw_albums_excerpt.csv"), str(data_path / "raw_tracks_excerpt.csv"))
     tracks1 = track_reader.read_tracks_file()
-    # tracks is type list
     for row in tracks1:
         id = int(row["track_id"])
         title = row['track_title']
@@ -203,5 +217,4 @@ def load_tracks(data_path: Path, repo: MemoryRepository):
 
 
 def populate(data_path: Path, repo: MemoryRepository):
-    # Load tracks into the repository.
     load_tracks(data_path, repo)

@@ -1,13 +1,3 @@
-
-from flask import Blueprint, request, url_for, render_template
-from flask_wtf import FlaskForm
-from werkzeug.utils import redirect
-from wtforms import IntegerField, SubmitField
-from wtforms.validators import DataRequired
-
-from music.domainmodel.track import Track
-from music.tracks import services
-
 from flask import Blueprint, redirect, render_template, url_for, request
 from flask_wtf import FlaskForm
 from wtforms import IntegerField, SubmitField, SelectField, StringField, HiddenField, TextAreaField
@@ -75,42 +65,6 @@ def list_tracks():
         first_tracks_url=first_tracks_url
     )
 
-
-@tracks_blueprint.route("/track/<int:track_id>")
-def track_view(track_id):
-    track = services.get_track_by_id(track_id, repo.repo_instance)
-    if track is None:
-        return render_template("404.html")
-
-    return render_template(
-        "tracks/track_view.html",
-        track_id=track.track_id,
-        track_title=track.title,
-        album_name=track.album.title,
-        artist_name=track.artist.full_name,
-        track_duration=track.track_duration,
-        track_url=track.track_url
-    )
-
-
-@tracks_blueprint.route("/find", methods=["GET", "POST"])
-def find_albums():
-    form = SearchForm()
-    if form.validate_on_submit():
-        print(f"Here is the data being passed from the search field {form.id.data}")
-        return redirect(url_for("tracks_bp.track_view", track_id=form.id.data))
-
-    else:
-        return render_template(
-            "tracks/track_search.html",
-            form=form,
-            handler_url=url_for("tracks_bp.find_albums"))
-
-
-class SearchForm(FlaskForm):
-    # Task 6: Define the variables below using IntegerField and SubmitField
-    id = IntegerField("Enter Album Title", [DataRequired()])
-    submit = SubmitField("Search")
 '''
 @tracks_blueprint.route('/filtered')
 def person_view():
@@ -279,4 +233,3 @@ class SearchForm(FlaskForm):
     search = StringField('')
 
 '''
-

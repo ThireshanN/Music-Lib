@@ -6,7 +6,7 @@
 </header>
 
 <div>
-  <form method="POST" action="{{ handler_url }}" style="margin: auto; width: 220px;">
+  <form method="POST" action="{{ handler_url }}">
     {{ form.csrf_token }}
     <div>{{ form.type.label }} {{ form.type }}</div>
     <div>{{ form.id.label }} {{ form.id }}</div>
