@@ -52,11 +52,14 @@ def create_app(test_config=None):
         # Please do not change the settings for connect_args and poolclass!
         database_engine = create_engine(database_uri, connect_args={"check_same_thread": False}, poolclass=NullPool,
                                         echo=database_echo)
+        print("engine created")
 
         # Create the database session factory using sessionmaker (this has to be done once, in a global manner)
         session_factory = sessionmaker(autocommit=False, autoflush=True, bind=database_engine)
+        print("session created")
         # Create the SQLAlchemy DatabaseRepository instance for an sqlite3-based repository.
         repo.repo_instance = database_repository.SqlAlchemyRepository(session_factory)
+        print("SQLrepo created")
 
         if app.config['TESTING'] == 'True' or len(database_engine.table_names()) == 0:
             print("REPOPULATING DATABASE...")
@@ -74,6 +77,7 @@ def create_app(test_config=None):
             print("REPOPULATING DATABASE... FINISHED")
 
         else:
+            print("trying to map tables")
             # Solely generate mappings that map domain model classes to the database tables.
             map_model_to_tables()
 
