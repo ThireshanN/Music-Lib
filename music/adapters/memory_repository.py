@@ -183,10 +183,10 @@ class MemoryRepository(AbstractRepository):
         return next((p for p in self.__tracks if p.track_id == reference), None)
 
 
-def load_tracks(data_path: Path, repo: MemoryRepository):
+def load_tracks(data_path: Path, repo: AbstractRepository, database_mode: bool):
     track_reader = TrackCSVReader(str(data_path / "raw_albums_excerpt.csv"), str(data_path / "raw_tracks_excerpt.csv"))
-    tracks1 = track_reader.read_tracks_file()
-    for row in tracks1:
+    tracks = track_reader.read_tracks_file()
+    for row in tracks:
         id = int(row["track_id"])
         title = row['track_title']
 
@@ -217,7 +217,6 @@ def load_tracks(data_path: Path, repo: MemoryRepository):
             for genre in genres:
                 genre_id = int(genre["genre_id"])
                 genre_title = genre["genre_title"]
-                # genre_url = genre["genre_url"]
                 genre = Genre(genre_id, genre_title)
                 new_track.add_genre(genre)
                 repo.add_genre(genre, new_track)
@@ -226,5 +225,5 @@ def load_tracks(data_path: Path, repo: MemoryRepository):
         repo.add_track(new_track)
 
 
-def populate(data_path: Path, repo: MemoryRepository):
-    load_tracks(data_path, repo)
+def populate(data_path: Path, repo: AbstractRepository, database_mode: bool):
+    load_tracks(data_path, repo, database_mode)

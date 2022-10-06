@@ -94,10 +94,6 @@ class AbstractRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get_tracks_by_ids(self, random_ids):
-        raise NotImplementedError
-
-    @abc.abstractmethod
     def get_previous_track(self, track: Track):
         raise NotImplementedError
 
