@@ -73,7 +73,7 @@ class SqlAlchemyRepository(AbstractRepository):
 
         return user
 
-    def get_user_id(self, userid) -> User:  #To Do
+    def get_user_id(self, userid) -> User:
         user = None
         try:
             user = self._session_cm.session.query(User).filter(User._User__user_id == userid).one()
@@ -81,7 +81,7 @@ class SqlAlchemyRepository(AbstractRepository):
             pass
         return user
 
-    def get_playlist_tracks(self):  #To Do
+    def get_playlist_tracks(self):  #To Do - Need to implement playlist
         return self.__playlist.get_all_tracks()
 
     def delete_from_playlist(self, track):  #To Do

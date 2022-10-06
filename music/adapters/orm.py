@@ -50,7 +50,7 @@ album_table = Table(
 )
 playlist_table = Table(
     'playlist', metadata,
-    Column('id', Integer, primary_key=True, autoincrement=False)
+    Column('id', Integer, primary_key=True, autoincrement=True)
 )
 
 genres_table = Table(
@@ -79,6 +79,13 @@ track_genre_table = Table(
     Column('id', Integer, primary_key=True, autoincrement=True),
     Column('track_id', ForeignKey('tracks.id')),
     Column('genre_id', ForeignKey('genres.id'))
+)
+
+playlist_tracks_table = Table(
+    'playlist_tracks', metadata,
+    Column('id', Integer, primary_key=True, autoincrement=True),
+    Column("playlist_id", ForeignKey("playlist.id")),
+    Column('track_id', ForeignKey('tracks.id'))
 )
 
 
@@ -124,6 +131,11 @@ def map_model_to_tables():
         "_Review__review_text": reviews_table.c.review_text,
         "_Review__rating": reviews_table.c.rating,
         "_Review__timestamp": reviews_table.c.timestamp
+    })
+
+    mapper(playlist.PlayList, playlist_table, properties={
+        "_Playlist__playlist_id": playlist_table.c.id,
+        "_Playlist__tracks": relationship(playlist.Track, secondary=playlist_tracks_table)
     })
 
 

@@ -3,7 +3,8 @@ from music.domainmodel.track import Track
 
 class PlayList:
 
-    def __init__(self):
+    def __init__(self, playlist_id: int):
+        self.__playlist_id: int = playlist_id
         self.__list_of_tracks = []
 
     def get_all_tracks(self):
