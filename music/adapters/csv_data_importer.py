@@ -95,9 +95,11 @@ def load_tracks(data_path: Path, repo: AbstractRepository, database_mode: bool):
             artist_id = int(row['artist_id'])
         except ValueError:
             artist_id = 9999
-
+        #print(f"\n\n\n\n\n\n\n{new_track}\n\n\n\n\n\n\n\n\n")
         new_album = Album(album_id, row['album_title'])
+        #print(f"\n\n\n\n\n\n\n{new_album}\n\n\n\n\n\n\n\n\n")
         new_artist = Artist(artist_id, row['artist_name'])
+        #print(f"\n\n\n\n\n\n\n{new_artist}\n\n\n\n\n\n\n\n\n")
 
         new_track.album = new_album
         new_track.artist = new_artist
@@ -115,3 +117,6 @@ def load_tracks(data_path: Path, repo: AbstractRepository, database_mode: bool):
         repo.add_album(new_album, new_track)
         repo.add_artist(new_artist, new_track)
         repo.add_track(new_track)
+
+
+

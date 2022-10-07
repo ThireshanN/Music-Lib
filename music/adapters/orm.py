@@ -14,39 +14,36 @@ metadata = MetaData()
 
 users_table = Table(
     'users', metadata,
-    Column('id', Integer, primary_key=True, autoincrement=True),
+    Column('id', Integer, primary_key=True, autoincrement=False),
     Column('user_name', String(255), unique=True, nullable=False),
     Column('password', String(255), nullable=False)
 )
 
 track_table = Table(
     "tracks", metadata,  # This is the name of the table we are creating
-    Column("id", Integer, primary_key=True, autoincrement=False),
+    Column("id", Integer, primary_key=True),
     Column("title", String(255), nullable=False),
     Column("artist_id", ForeignKey("artists.id")),
     Column("album_id", ForeignKey("albums.id")),
-    Column("url", String(255), nullable=False),
-    Column("duration", String(255), nullable=False),
-    Column("song_url", String(255), nullable=False)
+    Column("url", String(255), nullable=True),
+    Column("duration", String(255), nullable=True),
+    Column("song_url", String(255), nullable=True)
 )
 
 artist_table = Table(
     "artists", metadata,
-    Column("id", Integer, primary_key=True, autoincrement=False),
+    Column("id", Integer, primary_key=True),
     Column("full_name", String(255), nullable=False),
 
 )
 
-
 album_table = Table(
     "albums", metadata,
-    Column("id", Integer, primary_key=True, autoincrement=False),
+    Column("id", Integer, primary_key=True),
     Column("title", String(255), nullable=False),
-    Column("artist_id", ForeignKey("artists.id")),
-    Column("album_id", ForeignKey("albums.id")),
-    Column("url", String(255), nullable=False),
-    Column("type", String(255), nullable=False),
-    Column("release_year", Integer, nullable=False)
+    Column("url", String(255), nullable=True),
+    Column("type", String(255), nullable=True),
+    Column("release_year", Integer, nullable=True)
 )
 playlist_table = Table(
     'playlist', metadata,
@@ -55,7 +52,7 @@ playlist_table = Table(
 
 genres_table = Table(
     'genres', metadata,
-    Column('id', Integer, primary_key=True, autoincrement=False),
+    Column('id', Integer, primary_key=True),
     Column("name", String(255), nullable=False)
 )
 
@@ -99,7 +96,7 @@ def map_model_to_tables():
     })
 
     mapper(track.Track, track_table, properties={
-        "__track_id": track_table.c.id,
+        "__track__track_id": track_table.c.id,
         "_Track__title": track_table.c.title,
         "_Track__artist": relationship(artist.Artist),
         "_Track__album": relationship(album.Album),
