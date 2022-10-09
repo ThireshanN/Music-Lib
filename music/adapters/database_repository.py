@@ -99,7 +99,7 @@ class SqlAlchemyRepository(AbstractRepository):
         pass
         # self.__playlist.add_track(track)
 
-<<<<<<< Updated upstream
+
     def get_review(self):  # To Do
         pass
         # return self.__track_to_review
@@ -111,7 +111,7 @@ class SqlAlchemyRepository(AbstractRepository):
         #    self.__track_to_review[k].append(review)
         # else:
         #    self.__track_to_review[k] = [review]
-=======
+
     def get_review(self):
         pass
         print("Get Review 1")
@@ -139,7 +139,7 @@ class SqlAlchemyRepository(AbstractRepository):
             scm.session.add(review)
             scm.commit()
         print("post done")
->>>>>>> Stashed changes
+
 
     def get_all_users(self):
         return self._session_cm.session.query(User).all()
