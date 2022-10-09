@@ -6,6 +6,7 @@ from datetime import date, datetime
 from typing import List
 
 from bisect import bisect, bisect_left, insort_left
+from flask import session
 
 from werkzeug.security import generate_password_hash
 
@@ -31,17 +32,35 @@ class MemoryRepository(AbstractRepository):
         self.__album_to_track_dic = dict()
         self.__genre_to_track_dic = dict()
         self.__track_to_review = dict()
-        self.__playlist = PlayList(1)
+        self.__playlist = []
+        self.__playlist_users = []
 
     def get_playlist_tracks(self):
-        return self.__playlist.get_all_tracks()
+        userid = int(session['user_id'])
+        if userid not in self.__playlist_users:
+            return []
+        else:
+            ind = self.__playlist_users.index(userid)
+            pl = self.__playlist[ind]
+            return pl.get_all_tracks()
 
     def delete_from_playlist(self, track):
-        self.__playlist.remove_track(track)
+        userid = int(session['user_id'])
+        ind = self.__playlist_users.index(userid)
+        pl = self.__playlist[ind]
+        pl.remove_track(track)
 
     def add_to_playlist(self, track):
-        self.__playlist.add_track(track)
-        track.part_of_playlist(self.__playlist)
+        userid = int(session['user_id'])
+        if userid not in self.__playlist_users:
+            self.__playlist_users.append(userid)
+            pl = PlayList(userid)
+            pl.add_track(track)
+            self.__playlist.append(pl)
+        else:
+            ind = self.__playlist_users.index(userid)
+            pl = self.__playlist[ind]
+            pl.add_track(track)
 
     def get_review(self):
         return self.__track_to_review

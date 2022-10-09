@@ -4,8 +4,21 @@ from music.domainmodel.track import Track
 class PlayList:
 
     def __init__(self, playlist_id: int):
-        self.__playlist_id: int = playlist_id
+        self.__playlist_id: int = int(playlist_id)
         self.__list_of_tracks = []
+        self.__track_id = None
+
+    @property
+    def playlist_id(self) -> int:
+        return self.__playlist_id
+
+    @property
+    def track_id(self) -> int:
+        return self.__track_id
+
+    @track_id.setter
+    def track_id(self, idd):
+        self.__track_id = int(idd)
 
     def get_all_tracks(self):
         return self.__list_of_tracks

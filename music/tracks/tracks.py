@@ -236,7 +236,7 @@ class SearchForm(FlaskForm):
 
 
 @tracks_blueprint.route('/favourites')
-#@login_required
+@login_required
 def playlist():
     add_track_id = request.args.get('add')
     delete_track_id = request.args.get('del')

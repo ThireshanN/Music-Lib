@@ -43,7 +43,8 @@ album_table = Table(
 playlist_table = Table(
     'playlist', metadata,
     Column('id', Integer, primary_key=True, autoincrement=True),
-    Column('playlist_id', Integer, nullable=True)
+    Column('playlist_id', Integer, nullable=True),
+    Column("track_id", Integer, nullable=True),
 )
 
 genres_table = Table(
@@ -105,7 +106,7 @@ def map_model_to_tables():
         "_Track__playlists_added_to": relationship(
             playlist.PlayList,
             secondary=playlist_tracks_table,
-            back_populates='_Playlist__tracks')
+            back_populates='_PlayList__list_of_tracks')
     })  # Don't think that genres are working correctly
 
     mapper(album.Album, album_table, properties={
@@ -138,8 +139,9 @@ def map_model_to_tables():
     })
 
     mapper(playlist.PlayList, playlist_table, properties={
-        "_Playlist__playlist_id": playlist_table.c.id,
-        "_Playlist__tracks": relationship(
+        "_PlayList__playlist_id": playlist_table.c.playlist_id,
+        "_PlayList__track_id": playlist_table.c.track_id,
+        "_PlayList__list_of_tracks": relationship(
             track.Track,
             secondary=playlist_tracks_table,
             back_populates='_Track__playlists_added_to')

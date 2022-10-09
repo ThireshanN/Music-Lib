@@ -1,8 +1,10 @@
 from typing import Iterable
 
 from music.adapters.repository import AbstractRepository
+from music.domainmodel.playlist import PlayList
 from music.domainmodel.review import Review
 from music.domainmodel.track import Track
+from flask import session
 
 
 class NonExistentTrackException(Exception):
@@ -99,6 +101,13 @@ def get_genre(genre_id, repo: AbstractRepository):
 def add_to_playlist(track, repo: AbstractRepository):
     repo.add_to_playlist(track)
 
+
+'''
+def add_to_playlist(track, repo: AbstractRepository):
+    pl = PlayList(int((session['user_id'])))
+    pl.track_id = track.track_id
+    repo.add_to_playlist(pl)
+'''
 
 def delete_from_playlist(track, repo: AbstractRepository):
     repo.delete_from_playlist(track)

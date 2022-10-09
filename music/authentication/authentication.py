@@ -71,6 +71,7 @@ def login():
             # Initialise session and redirect the user to the home page.
             session.clear()
             session['user_name'] = user['user_name']
+            session['user_id'] = user['user_id']
             return redirect(url_for('home_bp.home'))
 
         except services.UnknownUserException:

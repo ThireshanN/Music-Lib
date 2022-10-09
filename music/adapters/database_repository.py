@@ -1,15 +1,17 @@
 from typing import List
 
-from sqlalchemy import desc, asc
+from sqlalchemy import desc, asc, delete, and_
 from sqlalchemy.exc import NoResultFound
 # from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 
 from sqlalchemy.orm import scoped_session
+from flask import session
 
 from music.adapters.repository import AbstractRepository
 from music.domainmodel.album import Album
 from music.domainmodel.artist import Artist
 from music.domainmodel.genre import Genre
+from music.domainmodel.playlist import PlayList
 from music.domainmodel.track import Track
 from music.domainmodel.user import User
 from music.domainmodel.review import Review
@@ -88,17 +90,49 @@ class SqlAlchemyRepository(AbstractRepository):
         return user
 
     def get_playlist_tracks(self):  # To Do - Need to implement playlist
-        pass
-        # return self.__playlist.get_all_tracks()
+        userid = int(session['user_id'])
+        operators = self._session_cm.session.query(PlayList).filter(PlayList._PlayList__playlist_id == userid).all()
+        ret_list = []
+        track_id_list = []
+        for ele in operators:
+            print("Get PL 4")
+            k = ele.track_id
+            print("Get PL 5")
+            if k not in track_id_list:
+                track_id_list.append(k)
+                ret_list.append(self.get_track(k))
+            else:
+                pass
+        return ret_list
 
     def delete_from_playlist(self, track):  # To Do
         pass
-        # self.__playlist.remove_track(track)
+        userid = int(session['user_id'])
+        self._session_cm.session.query(PlayList).filter(and_(PlayList._PlayList__playlist_id == userid, PlayList._PlayList__track_id == track.track_id)).delete(synchronize_session=False)
+        self._session_cm.commit()
 
     def add_to_playlist(self, track):  # To Do
-        pass
-        # self.__playlist.add_track(track)
-
+        with self._session_cm as scm:
+            #print("before dec temp")
+            #print(session['user_id'])
+            temp = PlayList(int(session['user_id']))
+            temp.track_id = track.track_id
+            #print(temp.track_id)
+            #print(int(session['user_id']))
+            #print("after dec temp")
+            scm.session.add(temp)
+            #print("after merging")
+            scm.commit()
+            #print("after commit")
+    '''
+    def add_to_playlist(self, playlist):  # To Do
+        with self._session_cm as scm:
+            print("PL Track ID: ", playlist.track_id)
+            print("PL ID: ", playlist.playlist_id)
+            scm.session.add(playlist)
+            scm.commit()
+        print("post done")
+    '''
 
     def get_review(self):  # To Do
         pass
@@ -113,21 +147,20 @@ class SqlAlchemyRepository(AbstractRepository):
         #    self.__track_to_review[k] = [review]
 
     def get_review(self):
-        pass
-        print("Get Review 1")
+        #print("Get Review 1")
         operators = self._session_cm.session.query(Review).all()
-        print("Get Review 2")
+        #print("Get Review 2")
         #operators = [op.login for op in operators]
         track_to_review_dict = dict()
-        print("Get Review 3")
+        #print("Get Review 3")
         for review in operators:
-            print("Get Review 4")
+            #print("Get Review 4")
             k = review.track_id
-            print("Get Review 5")
+            #print("Get Review 5")
             if k in track_to_review_dict:
-                print("Get Review 6")
+                #print("Get Review 6")
                 track_to_review_dict[k].append(review)
-                print("Get Review 7")
+                #print("Get Review 7")
             else:
                 track_to_review_dict[k] = [review]
         return track_to_review_dict
