@@ -53,11 +53,7 @@ class SessionContextManager:
 class SqlAlchemyRepository(AbstractRepository):
     def __init__(self, session_factory):
         self._session_cm = SessionContextManager(session_factory)
-        self.__artist_index = dict()
-        self.__album_index = dict()
         self.__genre_index = dict()
-        self.__artist_to_track_dic = dict()
-        self.__album_to_track_dic = dict()
         self.__genre_to_track_dic = dict()
 
     def close_session(self):
@@ -95,9 +91,7 @@ class SqlAlchemyRepository(AbstractRepository):
         ret_list = []
         track_id_list = []
         for ele in operators:
-            print("Get PL 4")
             k = ele.track_id
-            print("Get PL 5")
             if k not in track_id_list:
                 track_id_list.append(k)
                 ret_list.append(self.get_track(k))
@@ -108,71 +102,34 @@ class SqlAlchemyRepository(AbstractRepository):
     def delete_from_playlist(self, track):  # To Do
         pass
         userid = int(session['user_id'])
-        self._session_cm.session.query(PlayList).filter(and_(PlayList._PlayList__playlist_id == userid, PlayList._PlayList__track_id == track.track_id)).delete(synchronize_session=False)
+        self._session_cm.session.query(PlayList).filter(
+            and_(PlayList._PlayList__playlist_id == userid, PlayList._PlayList__track_id == track.track_id)).delete(
+            synchronize_session=False)
         self._session_cm.commit()
 
     def add_to_playlist(self, track):  # To Do
         with self._session_cm as scm:
-            #print("before dec temp")
-            #print(session['user_id'])
             temp = PlayList(int(session['user_id']))
             temp.track_id = track.track_id
-            #print(temp.track_id)
-            #print(int(session['user_id']))
-            #print("after dec temp")
             scm.session.add(temp)
-            #print("after merging")
             scm.commit()
-            #print("after commit")
-    '''
-    def add_to_playlist(self, playlist):  # To Do
-        with self._session_cm as scm:
-            print("PL Track ID: ", playlist.track_id)
-            print("PL ID: ", playlist.playlist_id)
-            scm.session.add(playlist)
-            scm.commit()
-        print("post done")
-    '''
-
-    def get_review(self):  # To Do
-        pass
-        # return self.__track_to_review
-
-    def post_review(self, review):  # To Do
-        pass
-        # k = review.track.track_id
-        # if k in self.__track_to_review:
-        #    self.__track_to_review[k].append(review)
-        # else:
-        #    self.__track_to_review[k] = [review]
 
     def get_review(self):
-        #print("Get Review 1")
         operators = self._session_cm.session.query(Review).all()
-        #print("Get Review 2")
-        #operators = [op.login for op in operators]
         track_to_review_dict = dict()
-        #print("Get Review 3")
         for review in operators:
-            #print("Get Review 4")
             k = review.track_id
-            #print("Get Review 5")
             if k in track_to_review_dict:
-                #print("Get Review 6")
                 track_to_review_dict[k].append(review)
-                #print("Get Review 7")
             else:
                 track_to_review_dict[k] = [review]
         return track_to_review_dict
 
-
-    def post_review(self, review):  #To Do
-        #super().post_review(review)
+    def post_review(self, review):
         with self._session_cm as scm:
             scm.session.add(review)
             scm.commit()
         print("post done")
-
 
     def get_all_users(self):
         return self._session_cm.session.query(User).all()
@@ -181,10 +138,74 @@ class SqlAlchemyRepository(AbstractRepository):
         return self.__genre_index, self.__genre_to_track_dic
 
     def get_artist_collective(self, artist_id):
-        return self.__artist_index, self.__artist_to_track_dic
+        artist_index = dict()
+        artist_to_track_dict = dict()
+        tracks = self._session_cm.session.execute('SELECT * FROM tracks WHERE artist_id = :artist_id', {'artist_id':
+        artist_id}).all()
+        artists = self._session_cm.session.execute('SELECT * FROM artists WHERE id = :artist_id', {'artist_id':
+        artist_id}).all()
+        artist_name = ""
+
+        for element in artists:
+            a_id = int(element[0])
+            artist_name = str(element[1])
+            artist = Artist(a_id, artist_name)
+            if a_id in artist_index:
+                artist_index[a_id].append(artist)
+            else:
+                artist_index[a_id] = artist
+
+        for element in tracks:
+            a_id = int(element[2])
+            track_obj = Track(int(element[0]), str(element[1]))
+            artist_obj = Artist(a_id, artist_name)
+            alb_id = int(element[3])
+            album_row = self._session_cm.session.execute('SELECT * FROM albums WHERE id = :album_id',
+                                                          {'album_id': alb_id}).fetchone()
+            album_obj = Album(int(album_row[0]), str(album_row[1]))
+            track_obj.artist = artist_obj
+            track_obj.album = album_obj
+            if a_id in artist_to_track_dict:
+                artist_to_track_dict[a_id].append(track_obj)
+            else:
+                artist_to_track_dict[a_id] = [track_obj]
+
+        return artist_index, artist_to_track_dict
 
     def get_album_collective(self, album_id):
-        return self.__album_index, self.__album_to_track_dic
+        album_index = dict()
+        album_to_track_dict = dict()
+        tracks = self._session_cm.session.execute('SELECT * FROM tracks WHERE album_id = :album_id', {'album_id':
+        album_id}).all()
+        albums = self._session_cm.session.execute('SELECT * FROM albums WHERE id = :album_id', {'album_id':
+        album_id}).all()
+        album_name = ""
+
+        for element in albums:
+            a_id = int(element[0])
+            album_name = str(element[1])
+            album = Album(a_id, album_name)
+            if a_id in album_index:
+                album_index[a_id].append(album)
+            else:
+                album_index[a_id] = album
+
+        for element in tracks:
+            a_id = int(element[3])
+            track_obj = Track(int(element[0]), str(element[1]))
+            album_obj = Album(a_id, album_name)
+            art_id = int(element[2])
+            artist_row = self._session_cm.session.execute('SELECT * FROM artists WHERE id = :album_id',
+                                                       {'album_id':art_id}).fetchone()
+            artist_obj = Artist(int(artist_row[0]), str(artist_row[1]))
+            track_obj.artist = artist_obj
+            track_obj.album = album_obj
+            if a_id in album_to_track_dict:
+                album_to_track_dict[a_id].append(track_obj)
+            else:
+                album_to_track_dict[a_id] = [track_obj]
+
+        return album_index, album_to_track_dict
 
     def add_genre(self, genre: Genre, track: Track):
         with self._session_cm as scm:

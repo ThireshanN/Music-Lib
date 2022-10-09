@@ -14,8 +14,8 @@ class RepositoryException(Exception):
     def __init__(self, message=None):
         pass
 
-class AbstractRepository(abc.ABC):
 
+class AbstractRepository(abc.ABC):
     @abc.abstractmethod
     def add_to_playlist(self, track):
         raise NotImplementedError
@@ -111,19 +111,3 @@ class AbstractRepository(abc.ABC):
     @abc.abstractmethod
     def get_last_track(self) -> Track:
         raise NotImplementedError
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

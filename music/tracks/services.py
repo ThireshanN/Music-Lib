@@ -81,8 +81,10 @@ def get_albums(album_id, repo: AbstractRepository):
 def get_artists(artist_id, repo: AbstractRepository):
     artist_id = int(artist_id)
     artist_index_dict, artist_to_tracks = repo.get_artist_collective(artist_id)
+
     if artist_id not in artist_index_dict:
         return None, None
+
     artist = artist_index_dict[artist_id]
     list_of_tracks = artist_to_tracks[artist_id]
     return artist, list_of_tracks

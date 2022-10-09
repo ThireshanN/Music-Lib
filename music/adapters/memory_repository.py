@@ -84,6 +84,8 @@ class MemoryRepository(AbstractRepository):
         return self.__artist_index, self.__artist_to_track_dic
 
     def get_album_collective(self, album_id):
+        print(f"Here is the album_index: \n {self.__album_index}\n\n")
+        print(f"Here is the album_to_track_dic: \n {self.__album_to_track_dic}\n\n")
         return self.__album_index, self.__album_to_track_dic
 
     def add_genre(self, genre: Genre, track: Track):
