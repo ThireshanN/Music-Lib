@@ -79,31 +79,38 @@ def comment_on_article():
         comments = reviews[k]
         #comments = rev_list.reverse()
         print("test1")
+        print('test1/1')
+        '''
         for ele in comments:
             print(ele)
         print("test2")
         print(type(comments))
-
+        '''
         comment = comments[0]
-
+        print('test1/2')
         comments_per_page = 5
         cursor = request.args.get('cursor')
-
+        print('test1/3')
         if cursor is None:
             cursor = 0
         else:
             cursor = int(cursor)
-
+        print('test1/4')
         next_tracks_url = None
         prev_tracks_url = None
 
         prev_track = next_track = None
         if len(comments) > 0:
             try:
+                print('test1/5')
                 index = utilities.track_index_subclass(comment, comments)
+                print('test1/5')
                 for stored_track in reversed(comments[0:index]):
+                    print('test1/5')
                     if stored_track.track_id < track.track_id:
+                        print('test1/5')
                         prev_track = stored_track.track_id
+                        print('test1/5')
                         break
             except ValueError:
                 print("mem repo get prev track")
@@ -124,7 +131,7 @@ def comment_on_article():
             prev_tracks_url = url_for('comments_bp.comment_on_article', track=track_id, cursor=cursor - comments_per_page)
         if cursor + comments_per_page < len(comments):
             next_tracks_url = url_for('comments_bp.comment_on_article', track=track_id, cursor=cursor + comments_per_page)
-
+    print('test1/6')
     return render_template(
         'tracks/track_comments.html',
         track_name=track.title,

@@ -6,8 +6,10 @@ class Review:
 
     def __init__(self, track: Track, review_text: str, rating: int):
         self.__track = None
+        self.__track_id = None
         if isinstance(track, Track):
             self.__track = track
+            self.__track_id = track.track_id
 
         self.__review_text = 'N/A'
         if isinstance(review_text, str):
@@ -19,6 +21,10 @@ class Review:
             raise ValueError('Invalid value for the rating.')
 
         self.__timestamp = datetime.now()
+
+    @property
+    def track_id(self) -> int:
+        return self.__track_id
 
     @property
     def track(self) -> Track:
@@ -54,10 +60,10 @@ class Review:
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False
-        return other.track == self.track and other.review_text == self.review_text and other.rating == self.rating and other.timestamp == self.timestamp
+        return other.track_id == self.track_id and other.review_text == self.review_text and other.rating == self.rating and other.timestamp == self.timestamp
 
     def __repr__(self):
-        return f'<Review of track {self.track}, rating = {self.rating}, review_text = {self.review_text}>'
+        return f'<Review of track {self.track_id}, rating = {self.rating}, review_text = {self.review_text}>'
 
     def __lt__(self, other):
         if not isinstance(other, self.__class__):

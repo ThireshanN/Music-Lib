@@ -42,7 +42,8 @@ album_table = Table(
 )
 playlist_table = Table(
     'playlist', metadata,
-    Column('id', Integer, primary_key=True, autoincrement=True)
+    Column('id', Integer, primary_key=True, autoincrement=True),
+    Column('playlist_id', Integer, nullable=True)
 )
 
 genres_table = Table(
@@ -63,6 +64,7 @@ reviews_table = Table(
     Column("id", Integer, primary_key=True, autoincrement=True),
     Column("rating", Integer, nullable=False),
     Column("review_text", String(1024), nullable=False),
+    Column("track_id", Integer, nullable=False),
     Column("timestamp", DateTime, nullable=False)
 )
 
@@ -131,6 +133,7 @@ def map_model_to_tables():
     mapper(review.Review, reviews_table, properties={
         "_Review__review_text": reviews_table.c.review_text,
         "_Review__rating": reviews_table.c.rating,
+        "_Review__track_id": reviews_table.c.track_id,
         "_Review__timestamp": reviews_table.c.timestamp
     })
 

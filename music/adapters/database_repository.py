@@ -12,6 +12,7 @@ from music.domainmodel.artist import Artist
 from music.domainmodel.genre import Genre
 from music.domainmodel.track import Track
 from music.domainmodel.user import User
+from music.domainmodel.review import Review
 from bisect import bisect, bisect_left, insort_left
 
 
@@ -65,7 +66,7 @@ class SqlAlchemyRepository(AbstractRepository):
 
     def add_user(self, user: User):
         with self._session_cm as scm:
-            scm.session.merge(user)
+            scm.session.add(user)
             scm.commit()
 
     def get_user(self, user_name: str) -> User:
@@ -98,6 +99,7 @@ class SqlAlchemyRepository(AbstractRepository):
         pass
         # self.__playlist.add_track(track)
 
+<<<<<<< Updated upstream
     def get_review(self):  # To Do
         pass
         # return self.__track_to_review
@@ -109,6 +111,35 @@ class SqlAlchemyRepository(AbstractRepository):
         #    self.__track_to_review[k].append(review)
         # else:
         #    self.__track_to_review[k] = [review]
+=======
+    def get_review(self):
+        pass
+        print("Get Review 1")
+        operators = self._session_cm.session.query(Review).all()
+        print("Get Review 2")
+        #operators = [op.login for op in operators]
+        track_to_review_dict = dict()
+        print("Get Review 3")
+        for review in operators:
+            print("Get Review 4")
+            k = review.track_id
+            print("Get Review 5")
+            if k in track_to_review_dict:
+                print("Get Review 6")
+                track_to_review_dict[k].append(review)
+                print("Get Review 7")
+            else:
+                track_to_review_dict[k] = [review]
+        return track_to_review_dict
+
+
+    def post_review(self, review):  #To Do
+        #super().post_review(review)
+        with self._session_cm as scm:
+            scm.session.add(review)
+            scm.commit()
+        print("post done")
+>>>>>>> Stashed changes
 
     def get_all_users(self):
         return self._session_cm.session.query(User).all()
@@ -157,7 +188,7 @@ class SqlAlchemyRepository(AbstractRepository):
             scm.session.merge(track)
             scm.commit()
 
-    def get_track(self, track_id: int) -> Track:
+    def get_track(self, id: int) -> Track:
         track = None
         try:
             track = self._session_cm.session.query(Track).filter(Track._Track__track_id == id).one()
