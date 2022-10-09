@@ -5,6 +5,7 @@ import ast
 from music.domainmodel.artist import Artist
 from music.domainmodel.album import Album
 from music.domainmodel.track import Track
+from music.adapters.database_repository import SqlAlchemyRepository
 from music.domainmodel.genre import Genre
 
 
@@ -151,6 +152,7 @@ class TrackCSVReader:
             album = albums_dict[album_id] if album_id in albums_dict else None
             track.album = album
 
+
             # Populate datasets for Artist and Genre
             if artist not in self.__dataset_of_artists:
                 self.__dataset_of_artists.add(artist)
@@ -164,7 +166,17 @@ class TrackCSVReader:
 
             self.__dataset_of_tracks.append(track)
 
+# This is what i've been testing don't think its working
+        if len(self.__dataset_of_tracks) != 0:
+            for track in self.__dataset_of_tracks:
+                SqlAlchemyRepository.add_track(track)
+                for album in self.__dataset_of_albums:
+                    SqlAlchemyRepository.add_album(album, track)
+
+
+
         return self.__dataset_of_tracks
+
 
 
 

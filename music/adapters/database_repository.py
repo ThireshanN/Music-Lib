@@ -60,7 +60,7 @@ class SqlAlchemyRepository(AbstractRepository):
 
     def add_user(self, user: User):
         with self._session_cm as scm:
-            scm.session.add(user)
+            scm.session.merge(user)
             scm.commit()
 
     def get_user(self, user_name: str) -> User:
@@ -147,7 +147,7 @@ class SqlAlchemyRepository(AbstractRepository):
     def add_track(self, track: Track):
         print("database trying to add track")
         with self._session_cm as scm:
-            scm.session.add(track)
+            scm.session.merge(track)
             scm.commit()
 
     def get_track(self, track_id: int) -> Track:
