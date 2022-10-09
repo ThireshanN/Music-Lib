@@ -129,23 +129,16 @@ class SqlAlchemyRepository(AbstractRepository):
         #self.__genre_index[genre.genre_id] = genre
 
     def add_artist(self, artist: Artist, track: Track):  #To Do
-        pass
-        #if artist.artist_id in self.__artist_to_track_dic:
-        #    self.__artist_to_track_dic[artist.artist_id].append(track)
-        #else:
-        #    self.__artist_to_track_dic[artist.artist_id] = [track]
-        #self.__artist_index[artist.artist_id] = artist
+        with self._session_cm as scm:
+            scm.session.merge(artist)
+            scm.commit()
 
     def add_album(self, album: Album, track: Track):  #To Do
-        pass
-        #if album.album_id in self.__album_to_track_dic:
-        #    self.__album_to_track_dic[album.album_id].append(track)
-        #else:
-        #    self.__album_to_track_dic[album.album_id] = [track]
-        #self.__album_index[album.album_id] = album
+        with self._session_cm as scm:
+            scm.session.merge(album)
+            scm.commit()
 
     def add_track(self, track: Track):
-        print("database trying to add track")
         with self._session_cm as scm:
             scm.session.merge(track)
             scm.commit()

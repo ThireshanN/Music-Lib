@@ -97,7 +97,7 @@ def map_model_to_tables():
     })
 
     mapper(track.Track, track_table, properties={
-        "__track__track_id": track_table.c.id,
+        "_Track__track_id": track_table.c.id,
         "_Track__title": track_table.c.title,
         "_Track__artist": relationship(artist.Artist),
         "_Track__album": relationship(album.Album),
