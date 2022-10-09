@@ -221,21 +221,13 @@ class SqlAlchemyRepository(AbstractRepository):
         with self._session_cm as scm:
             scm.session.merge(artist)
             scm.commit()
-        if artist.artist_id in self.__artist_to_track_dic:
-            self.__artist_to_track_dic[artist.artist_id].append(track)
-        else:
-            self.__artist_to_track_dic[artist.artist_id] = [track]
-        self.__artist_index[artist.artist_id] = artist
+
 
     def add_album(self, album: Album, track: Track):
         with self._session_cm as scm:
             scm.session.merge(album)
             scm.commit()
-        if album.album_id in self.__album_to_track_dic:
-            self.__album_to_track_dic[album.album_id].append(track)
-        else:
-            self.__album_to_track_dic[album.album_id] = [track]
-        self.__album_index[album.album_id] = album
+
 
     def add_track(self, track: Track):
         with self._session_cm as scm:
