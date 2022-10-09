@@ -14,7 +14,6 @@ class RepositoryException(Exception):
     def __init__(self, message=None):
         pass
 
-
 class AbstractRepository(abc.ABC):
 
     @abc.abstractmethod
@@ -38,15 +37,15 @@ class AbstractRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get_artist_collective(self):
+    def get_artist_collective(self, artist_id):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get_album_collective(self):
+    def get_album_collective(self, album_id):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get_genre_collective(self):
+    def get_genre_collective(self, genre_id):
         raise NotImplementedError
 
     @abc.abstractmethod

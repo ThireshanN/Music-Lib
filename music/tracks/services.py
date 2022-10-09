@@ -68,7 +68,7 @@ def tracks_to_dict(tracks: Iterable[Track]):
 
 def get_albums(album_id, repo: AbstractRepository):
     album_id = int(album_id)
-    albums_index_dict, albums_to_tracks = repo.get_album_collective()
+    albums_index_dict, albums_to_tracks = repo.get_album_collective(album_id)
     if album_id not in albums_index_dict:
         return None, None
     album = albums_index_dict[album_id]
@@ -78,7 +78,7 @@ def get_albums(album_id, repo: AbstractRepository):
 
 def get_artists(artist_id, repo: AbstractRepository):
     artist_id = int(artist_id)
-    artist_index_dict, artist_to_tracks = repo.get_artist_collective()
+    artist_index_dict, artist_to_tracks = repo.get_artist_collective(artist_id)
     if artist_id not in artist_index_dict:
         return None, None
     artist = artist_index_dict[artist_id]
@@ -88,7 +88,7 @@ def get_artists(artist_id, repo: AbstractRepository):
 
 def get_genre(genre_id, repo: AbstractRepository):
     genre_id = int(genre_id)
-    genre_index_dict, genre_to_tracks = repo.get_genre_collective()
+    genre_index_dict, genre_to_tracks = repo.get_genre_collective(genre_id)
     if genre_id not in genre_index_dict:
         return None, None
     genre = genre_index_dict[genre_id]

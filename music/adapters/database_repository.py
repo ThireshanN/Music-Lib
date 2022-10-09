@@ -48,9 +48,14 @@ class SessionContextManager:
 
 
 class SqlAlchemyRepository(AbstractRepository):
-
     def __init__(self, session_factory):
         self._session_cm = SessionContextManager(session_factory)
+        self.__artist_index = dict()
+        self.__album_index = dict()
+        self.__genre_index = dict()
+        self.__artist_to_track_dic = dict()
+        self.__album_to_track_dic = dict()
+        self.__genre_to_track_dic = dict()
 
     def close_session(self):
         self._session_cm.close_current_session()
@@ -81,62 +86,71 @@ class SqlAlchemyRepository(AbstractRepository):
             pass
         return user
 
-    def get_playlist_tracks(self):  #To Do - Need to implement playlist
+    def get_playlist_tracks(self):  # To Do - Need to implement playlist
         pass
-        #return self.__playlist.get_all_tracks()
+        # return self.__playlist.get_all_tracks()
 
-    def delete_from_playlist(self, track):  #To Do
+    def delete_from_playlist(self, track):  # To Do
         pass
-        #self.__playlist.remove_track(track)
+        # self.__playlist.remove_track(track)
 
-    def add_to_playlist(self, track):  #To Do
+    def add_to_playlist(self, track):  # To Do
         pass
-        #self.__playlist.add_track(track)
+        # self.__playlist.add_track(track)
 
-    def get_review(self):  #To Do
+    def get_review(self):  # To Do
         pass
-        #return self.__track_to_review
+        # return self.__track_to_review
 
-    def post_review(self, review):  #To Do
+    def post_review(self, review):  # To Do
         pass
-        #k = review.track.track_id
-        #if k in self.__track_to_review:
+        # k = review.track.track_id
+        # if k in self.__track_to_review:
         #    self.__track_to_review[k].append(review)
-        #else:
+        # else:
         #    self.__track_to_review[k] = [review]
 
     def get_all_users(self):
         return self._session_cm.session.query(User).all()
 
-    def get_genre_collective(self):  #To Do
-        pass
-        #return self.__genre_index, self.__genre_to_track_dic
+    def get_genre_collective(self, genre_id):
+        return self.__genre_index, self.__genre_to_track_dic
 
-    def get_artist_collective(self):  #To Do
-        pass
-        #return self.__artist_index, self.__artist_to_track_dic
+    def get_artist_collective(self, artist_id):
+        return self.__artist_index, self.__artist_to_track_dic
 
-    def get_album_collective(self):  #To Do
-        pass
-        #return self.__album_index, self.__album_to_track_dic
+    def get_album_collective(self, album_id):
+        return self.__album_index, self.__album_to_track_dic
 
-    def add_genre(self, genre: Genre, track: Track):  #To Do
-        pass
-        #if genre.genre_id in self.__genre_to_track_dic:
-        #    self.__genre_to_track_dic[genre.genre_id].append(track)
-        #else:
-        #    self.__genre_to_track_dic[genre.genre_id] = [track]
-        #self.__genre_index[genre.genre_id] = genre
+    def add_genre(self, genre: Genre, track: Track):
+        with self._session_cm as scm:
+            scm.session.merge(genre)
+            scm.commit()
+        if genre.genre_id in self.__genre_to_track_dic:
+            self.__genre_to_track_dic[genre.genre_id].append(track)
+        else:
+            self.__genre_to_track_dic[genre.genre_id] = [track]
+        self.__genre_index[genre.genre_id] = genre
 
-    def add_artist(self, artist: Artist, track: Track):  #To Do
+    def add_artist(self, artist: Artist, track: Track):
         with self._session_cm as scm:
             scm.session.merge(artist)
             scm.commit()
+        if artist.artist_id in self.__artist_to_track_dic:
+            self.__artist_to_track_dic[artist.artist_id].append(track)
+        else:
+            self.__artist_to_track_dic[artist.artist_id] = [track]
+        self.__artist_index[artist.artist_id] = artist
 
-    def add_album(self, album: Album, track: Track):  #To Do
+    def add_album(self, album: Album, track: Track):
         with self._session_cm as scm:
             scm.session.merge(album)
             scm.commit()
+        if album.album_id in self.__album_to_track_dic:
+            self.__album_to_track_dic[album.album_id].append(track)
+        else:
+            self.__album_to_track_dic[album.album_id] = [track]
+        self.__album_index[album.album_id] = album
 
     def add_track(self, track: Track):
         with self._session_cm as scm:
@@ -146,7 +160,7 @@ class SqlAlchemyRepository(AbstractRepository):
     def get_track(self, track_id: int) -> Track:
         track = None
         try:
-            track = self._session_cm.session.query(Track).filter(Track._Track__track__id == id).one()
+            track = self._session_cm.session.query(Track).filter(Track._Track__track_id == id).one()
         except NoResultFound:
             pass
         return track
@@ -165,38 +179,15 @@ class SqlAlchemyRepository(AbstractRepository):
         track = self._session_cm.session.query(Track).order_by(desc(Track._Track__track__id)).first()
         return track
 
-    def get_previous_track(self, track: Track): #To Do
+    def get_previous_track(self, track: Track):  # Don't need
         pass
-        #prev_track = None
-        #try:
-        #    index = self.track_index(track)
-        #    for stored_track in reversed(self.__tracks[0:index]):
-        #        if stored_track.track_id < track.track_id:
-        #            prev_track = stored_track.track_id
-        #            break
-        #except ValueError:
-        #    print("mem repo get prev track")
-        #    pass
-#
-        #return prev_track
 
-    def get_next_track(self, track: Track):  #To Do
+    def get_next_track(self, track: Track):  # Don't need
         pass
-        #next_track = None
-        #try:
-        #    index = self.track_index(track)
-        #    for stored_track in self.__tracks[index + 1:len(self.__tracks)]:
-        #        if stored_track.track_id > track.track_id:
-        #            next_track = stored_track.track_id
-        #            break
-        #except ValueError:
-        #    pass
-#
-        #return next_track
 
-    def track_index(self, track: Track):#To Do
+    def track_index(self, track: Track):  # To Do
         pass
-        #index = bisect_left(self.__tracks, track)
-        #if index != len(self.__tracks) and self.__tracks[index].track_id == track.track_id:
+        # index = bisect_left(self.__tracks, track)
+        # if index != len(self.__tracks) and self.__tracks[index].track_id == track.track_id:
         #    return index
-        #raise ValueError("in track index - mem repo")
+        # raise ValueError("in track index - mem repo")

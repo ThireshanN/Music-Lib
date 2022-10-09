@@ -31,7 +31,7 @@ class MemoryRepository(AbstractRepository):
         self.__album_to_track_dic = dict()
         self.__genre_to_track_dic = dict()
         self.__track_to_review = dict()
-        self.__playlist = PlayList()
+        self.__playlist = PlayList(1)
 
     def get_playlist_tracks(self):
         return self.__playlist.get_all_tracks()
@@ -56,13 +56,15 @@ class MemoryRepository(AbstractRepository):
     def get_all_users(self):
         return self.__users
 
-    def get_genre_collective(self):
+    def get_genre_collective(self, genre_id):
         return self.__genre_index, self.__genre_to_track_dic
 
-    def get_artist_collective(self):
+    def get_artist_collective(self, artist_id):
+        print(f"Here is the artist_index: \n {self.__artist_index}\n\n")
+        print(f"Here is the artist_to_track_dic: \n {self.__artist_to_track_dic}\n\n")
         return self.__artist_index, self.__artist_to_track_dic
 
-    def get_album_collective(self):
+    def get_album_collective(self, album_id):
         return self.__album_index, self.__album_to_track_dic
 
     def add_genre(self, genre: Genre, track: Track):

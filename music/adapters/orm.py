@@ -2,12 +2,7 @@ from sqlalchemy import MetaData, Table, Column, Integer, String, ForeignKey, Dat
 from sqlalchemy.orm import relationship, mapper
 
 from music.domainmodel import user, genre, artist, album, track, review, playlist
-from music.domainmodel.album import Album
-from music.domainmodel.artist import Artist
-from music.domainmodel.genre import Genre
-from music.domainmodel.review import Review
-from music.domainmodel.track import Track
-from music.domainmodel.user import User
+
 
 # global variable giving access to the MetaData (schema) information of the database
 metadata = MetaData()
@@ -20,7 +15,7 @@ users_table = Table(
 )
 
 track_table = Table(
-    "tracks", metadata,  # This is the name of the table we are creating
+    "tracks", metadata,
     Column("id", Integer, primary_key=True),
     Column("title", String(255), nullable=False),
     Column("artist_id", ForeignKey("artists.id")),
@@ -86,14 +81,11 @@ playlist_tracks_table = Table(
 )
 
 
-
 def map_model_to_tables():
-    print("getting to table mapping function")
     mapper(user.User, users_table, properties={
         '_User__user_id': users_table.c.id,
         '_User__user_name': users_table.c.user_name,
         '_User__password': users_table.c.password
-        #'_User__reviews': relationship(user.Review)
     })
 
     mapper(track.Track, track_table, properties={
@@ -112,7 +104,7 @@ def map_model_to_tables():
             playlist.PlayList,
             secondary=playlist_tracks_table,
             back_populates='_Playlist__tracks')
-    }) # Don't think that genres are working correctly
+    })  # Don't think that genres are working correctly
 
     mapper(album.Album, album_table, properties={
         "_Album__album_id": album_table.c.id,
@@ -149,6 +141,3 @@ def map_model_to_tables():
             secondary=playlist_tracks_table,
             back_populates='_Track__playlists_added_to')
     })
-
-
-    print("getting to end of table mapping function")

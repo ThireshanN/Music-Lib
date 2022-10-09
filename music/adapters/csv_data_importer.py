@@ -96,29 +96,21 @@ def load_tracks(data_path: Path, repo: AbstractRepository, database_mode: bool):
         try:
             artist_id = int(row['artist_id'])
         except ValueError:
-            artist_id = 9999
-        #print(f"\n\n\n\n\n\n\n{new_track}\n\n\n\n\n\n\n\n\n")
-
+            artist_id = random.randrange(1000, 100000)
 
         album_name = str(row['album_title'])
-        if len(album_name)  < 1:
-            album_name = "None"
-        #print(album_name)
 
+        if len(album_name) < 1:
+            album_name = "None"
 
         new_album = Album(album_id, album_name)
-
-
-        #print(f"\n\n\n\n\n\n\n{new_album}\n\n\n\n\n\n\n\n\n")
         new_artist = Artist(artist_id, row['artist_name'])
-        #print(f"\n\n\n\n\n\n\n{new_artist}\n\n\n\n\n\n\n\n\n")
 
         new_track.album = new_album
         new_track.artist = new_artist
         genres = row["track_genres"]
         if len(genres) > 0:
             genres = ast.literal_eval(genres)
-            # print("Test5")
             for genre in genres:
                 genre_id = int(genre["genre_id"])
                 genre_title = genre["genre_title"]
@@ -128,58 +120,5 @@ def load_tracks(data_path: Path, repo: AbstractRepository, database_mode: bool):
         repo.add_album(new_album, new_track)
         repo.add_artist(new_artist, new_track)
         repo.add_track(new_track)
-
-
-'''
-def load_tracks(data_path: Path, repo: AbstractRepository, database_mode: bool):
-    print("Getting to load tracks in the data_importer")
-    track_reader = TrackCSVReader(str(data_path / "raw_albums_excerpt.csv"), str(data_path / "raw_tracks_excerpt.csv"))
-    tracks = track_reader.read_tracks_file()
-    for row in tracks:
-        id = int(row["track_id"])
-        title = row['track_title']
-
-        new_track = Track(int(row["track_id"]), row['track_title'])
-        new_track.track_duration = int(float(row['track_duration']))
-        new_track.track_url = row['track_url']
-        new_track.set_song_url(row['track_file'])
-        try:
-            album_id = int(row['album_id'])
-        except ValueError:
-            print("test1")
-
-        try:
-            artist_id = int(row['artist_id'])
-        except ValueError:
-            artist_id = 9999
-        print("test2")
-        #print(f"\n\n\n\n\n\n\n{new_track}\n\n\n\n\n\n\n\n\n")
-        new_album = Album(album_id, row['album_title'])
-        #print(f"\n\n\n\n\n\n\n{new_album}\n\n\n\n\n\n\n\n\n")
-        new_artist = Artist(artist_id, row['artist_name'])
-        #print(f"\n\n\n\n\n\n\n{new_artist}\n\n\n\n\n\n\n\n\n")
-
-        new_track.album = new_album
-        new_track.artist = new_artist
-        print("test3")
-        genres = row["track_genres"]
-        if len(genres) > 0:
-            genres = ast.literal_eval(genres)
-            # print("Test5")
-            for genre in genres:
-                genre_id = int(genre["genre_id"])
-                genre_title = genre["genre_title"]
-                genre = Genre(genre_id, genre_title)
-                new_track.add_genre(genre)
-                repo.add_genre(genre, new_track)
-        print("test4")
-        repo.add_album(new_album, new_track)
-        print("test5")
-        repo.add_artist(new_artist, new_track)
-        print("test6")
-        repo.add_track(new_track)
-        print("test7")
-'''
-
 
 
