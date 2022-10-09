@@ -41,6 +41,7 @@ class MemoryRepository(AbstractRepository):
 
     def add_to_playlist(self, track):
         self.__playlist.add_track(track)
+        track.part_of_playlist(self.__playlist)
 
     def get_review(self):
         return self.__track_to_review

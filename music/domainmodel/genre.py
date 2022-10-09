@@ -10,6 +10,8 @@ class Genre:
         else:
             self.__name = None
 
+        self.__tracks: list = []
+
     @property
     def genre_id(self) -> int:
         return self.__genre_id

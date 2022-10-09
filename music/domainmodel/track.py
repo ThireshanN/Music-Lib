@@ -21,7 +21,9 @@ class Track:
         # duration in seconds
         self.__track_duration: int | None = None
         self.__genres: list = []
+        self.__playlists_added_to = []
         self.__song_url: str | None = None
+
 
     @property
     def track_id(self) -> int:
@@ -93,6 +95,12 @@ class Track:
     @property
     def genres(self) -> list:
         return self.__genres
+
+    def part_of_playlist(self, playlist):
+        if playlist not in self.__playlists_added_to:
+            self.__playlists_added_to.append(playlist)
+        else:
+            pass
 
     def add_genre(self, new_genre):
         if not isinstance(new_genre, Genre) or new_genre in self.__genres:

@@ -86,6 +86,7 @@ playlist_tracks_table = Table(
 )
 
 
+
 def map_model_to_tables():
     print("getting to table mapping function")
     mapper(user.User, users_table, properties={
@@ -103,7 +104,14 @@ def map_model_to_tables():
         "_Track__track_url": track_table.c.url,
         "_Track__track_duration": track_table.c.duration,
         "_Track__song_url": track_table.c.song_url,
-        "_Track__genres": relationship(track.Genre, secondary=track_genre_table)
+        "_Track__genres": relationship(
+            genre.Genre,
+            secondary=track_genre_table,
+            back_populates='_Genre__tracks'),
+        "_Track__playlists_added_to": relationship(
+            playlist.PlayList,
+            secondary=playlist_tracks_table,
+            back_populates='_Playlist__tracks')
     }) # Don't think that genres are working correctly
 
     mapper(album.Album, album_table, properties={
@@ -121,7 +129,11 @@ def map_model_to_tables():
 
     mapper(genre.Genre, genres_table, properties={
         "_Genre__genre_id": genres_table.c.id,
-        "_Genre__name": genres_table.c.name
+        "_Genre__name": genres_table.c.name,
+        "_Genre__tracks": relationship(
+            track.Track,
+            secondary=track_genre_table,
+            back_populates='_Track__genres')
     })
 
     mapper(review.Review, reviews_table, properties={
@@ -132,7 +144,10 @@ def map_model_to_tables():
 
     mapper(playlist.PlayList, playlist_table, properties={
         "_Playlist__playlist_id": playlist_table.c.id,
-        "_Playlist__tracks": relationship(playlist.Track, secondary=playlist_tracks_table)
+        "_Playlist__tracks": relationship(
+            track.Track,
+            secondary=playlist_tracks_table,
+            back_populates='_Track__playlists_added_to')
     })
 
 
