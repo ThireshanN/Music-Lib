@@ -23,7 +23,18 @@ class Track:
         self.__genres: list = []
         self.__playlists_added_to = []
         self.__song_url: str | None = None
+        self.__genre_string = None
 
+
+    @property
+    def genre_string(self) -> str:
+        return self.__genre_string
+
+    @genre_string.setter
+    def genre_string(self, gs: str):
+        self.__genre_string = None
+        if type(gs) is str and gs.strip() != '':
+            self.__genre_string = gs.strip()
 
     @property
     def track_id(self) -> int:

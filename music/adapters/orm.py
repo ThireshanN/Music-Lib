@@ -22,7 +22,8 @@ track_table = Table(
     Column("album_id", ForeignKey("albums.id")),
     Column("url", String(255), nullable=True),
     Column("duration", String(255), nullable=True),
-    Column("song_url", String(255), nullable=True)
+    Column("song_url", String(255), nullable=True),
+    Column("genre_string", String, nullable=True)
 )
 
 artist_table = Table(
@@ -76,6 +77,7 @@ track_genre_table = Table(
     Column('genre_id', ForeignKey('genres.id'))
 )
 
+<<<<<<< Updated upstream
 playlist_tracks_table = Table(
     'playlist_tracks', metadata,
     #Column('id', Integer, primary_key=True, autoincrement=True),
@@ -84,6 +86,8 @@ playlist_tracks_table = Table(
 )
 
 
+=======
+>>>>>>> Stashed changes
 def map_model_to_tables():
     mapper(user.User, users_table, properties={
         '_User__user_id': users_table.c.id,
@@ -103,10 +107,7 @@ def map_model_to_tables():
             genre.Genre,
             secondary=track_genre_table,
             back_populates='_Genre__tracks'),
-        "_Track__playlists_added_to": relationship(
-            playlist.PlayList,
-            secondary=playlist_tracks_table,
-            back_populates='_PlayList__list_of_tracks')
+        "_Track__genre_string": track_table.c.genre_string
     })  # Don't think that genres are working correctly
 
     mapper(album.Album, album_table, properties={
@@ -140,10 +141,6 @@ def map_model_to_tables():
 
     mapper(playlist.PlayList, playlist_table, properties={
         "_PlayList__playlist_id": playlist_table.c.playlist_id,
-        "_PlayList__track_id": playlist_table.c.track_id,
-        "_PlayList__list_of_tracks": relationship(
-            track.Track,
-            secondary=playlist_tracks_table,
-            back_populates='_Track__playlists_added_to')
+        "_PlayList__track_id": playlist_table.c.track_id
     })
 

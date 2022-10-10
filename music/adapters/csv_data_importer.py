@@ -109,15 +109,18 @@ def load_tracks(data_path: Path, repo: AbstractRepository, database_mode: bool):
         new_track.album = new_album
         new_track.artist = new_artist
         genres = row["track_genres"]
+        genre_string = "";
         if len(genres) > 0:
             genres = ast.literal_eval(genres)
             for genre in genres:
+                genre_string = genre_string + ',' + genre["genre_id"]
                 genre_id = int(genre["genre_id"])
                 genre_title = genre["genre_title"]
                 genre = Genre(genre_id, genre_title)
                 #print(f"adding genre {genre} to this track {new_track}")
                 new_track.add_genre(genre)
                 repo.add_genre(genre, new_track)
+        new_track.genre_string = genre_string[1:]
         repo.add_album(new_album, new_track)
         repo.add_artist(new_artist, new_track)
         repo.add_track(new_track)

@@ -134,12 +134,40 @@ class SqlAlchemyRepository(AbstractRepository):
         return self._session_cm.session.query(User).all()
 
     def get_genre_collective(self, genre_id):
+<<<<<<< Updated upstream
         genre_index = dict()
         tracks = self._session_cm.session.query(Track).all()
         for element in tracks:
             genre_id = element.genres
             print(genre_id)
         return self.__genre_index, self.__genre_to_track_dic
+=======
+        tracks = self._session_cm.session.execute('SELECT id, genre_string  FROM tracks').all()
+        genre_table = self._session_cm.session.execute('SELECT * FROM genres').all()
+        genre_to_track_dic = dict()
+        genre_index = dict()
+        for ele in tracks:
+            track_id = int(ele[0])
+            tk = self.get_track(track_id)
+            listt = str(ele[1]).split(',')
+            for ele2 in listt:
+                print(ele2)
+                print(type(ele2))
+                try:
+                    g_id = int(ele2)
+                    if g_id in genre_to_track_dic:
+                        genre_to_track_dic[g_id].append(tk)
+                    else:
+                        genre_to_track_dic[g_id] = [tk]
+                except ValueError:
+                    print("No Genres")
+        for ele in genre_table:
+            gen_id = int(ele[0])
+            gen_name = str(ele[1])
+            gen_to_add = Genre(gen_id, gen_name)
+            genre_index[gen_id] = gen_to_add
+        return genre_index, genre_to_track_dic
+>>>>>>> Stashed changes
 
     def get_artist_collective(self, artist_id):
         artist_index = dict()
@@ -215,13 +243,18 @@ class SqlAlchemyRepository(AbstractRepository):
         with self._session_cm as scm:
             scm.session.merge(genre)
             scm.commit()
+<<<<<<< Updated upstream
 
         # below is the same implementation as the mem_repo <- not persistent
+=======
+        '''
+>>>>>>> Stashed changes
         if genre.genre_id in self.__genre_to_track_dic:
             self.__genre_to_track_dic[genre.genre_id].append(track)
         else:
             self.__genre_to_track_dic[genre.genre_id] = [track]
         self.__genre_index[genre.genre_id] = genre
+        '''
 
     def add_artist(self, artist: Artist, track: Track):
         with self._session_cm as scm:
