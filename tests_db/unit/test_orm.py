@@ -15,12 +15,13 @@ article_date = datetime.date(2020, 2, 28)
 
 def insert_user(empty_session, values=None):
     new_id = 1
-    new_name = "Andrew"
-    new_password = "1234"
+    new_name = "Tester123"
+    new_password = "Tester123"
 
     if values is not None:
-        new_name = values[0]
-        new_password = values[1]
+        new_id = values[0]
+        new_name = values[1]
+        new_password = values[2]
 
     empty_session.execute('INSERT INTO users (id, user_name, password) VALUES (:id, :user_name, :password)',
                           {'id': new_id, 'user_name': new_name, 'password': new_password})
@@ -31,7 +32,7 @@ def insert_user(empty_session, values=None):
 
 def insert_users(empty_session, values):
     for value in values:
-        empty_session.execute('INSERT INTO users (id, user_name, password) VALUES (:user_name, :password)',
+        empty_session.execute('INSERT INTO users (id, user_name, password) VALUES (:id, :user_name, :password)',
                               {'id': value[0], 'user_name': value[1], 'password': value[2]})
     rows = list(empty_session.execute('SELECT id from users'))
     keys = tuple(row[0] for row in rows)
@@ -121,11 +122,11 @@ def test_saving_of_users(empty_session):
 
 
 def test_saving_of_users_with_common_user_name(empty_session):
-    insert_user(empty_session, (1, "Andrew", "1234"))
+    insert_user(empty_session, (1, "Tester123", "Tester123"))
     empty_session.commit()
 
     with pytest.raises(IntegrityError):
-        user = User(1, "Andrew", "111")
+        user = User(1, "Tester123", "Tester123")
         empty_session.add(user)
         empty_session.commit()
 
