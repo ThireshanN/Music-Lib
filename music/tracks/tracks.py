@@ -65,25 +65,6 @@ def list_tracks():
         first_tracks_url=first_tracks_url
     )
 
-'''
-@tracks_blueprint.route('/filtered')
-def person_view():
-    id = request.args.get('id', None)
-    type = request.args.get('type', None)
-    for person in people_repo:
-        if person.id == person_id:
-            # Task 5: Render the `people_view.html` template. It takes `img_url`,
-            # 'firstname' and 'lastname' as variables.
-            return render_template(
-                'people_view.html',
-                img_url=person.url,
-                firstname=person.firstname,
-                lastname=person.lastname,
-            )
-    return render_template('404.html')
-'''
-
-
 def track_index_subclass(track1: Track, track_list):
     index1 = bisect_left(track_list, track1)
     if index1 != len(track_list) and track_list[index1].track_id == track1.track_id:
@@ -95,8 +76,6 @@ def track_index_subclass(track1: Track, track_list):
 def person_view():
     id1 = request.args.get('person_id', 0)
     type1 = request.args.get('type', None)
-    #print(id)
-    #type = request.args.get('type', None)
     type1_obj = None
     tracks = None
     name = None
@@ -113,11 +92,8 @@ def person_view():
         if type1_obj is not None:
             name = type1_obj.name
 
-    #print(artist)
     if type1_obj is None or tracks is None or type1 is None:
         return render_template('404.html')
-    print("test2")
-    print(len(tracks))
     track = tracks[0]
 
     tracks_per_page = 10
@@ -152,7 +128,6 @@ def person_view():
         except ValueError:
             print("mem repo get next track")
             pass
-    print(len(tracks))
     curr_iter_tracks = tracks[cursor:cursor + tracks_per_page]
 
     if cursor > 0:
@@ -160,13 +135,8 @@ def person_view():
     if cursor + tracks_per_page < len(tracks):
         next_tracks_url = url_for('tracks_bp.person_view', cursor=cursor + tracks_per_page, person_id=id1, type=type1)
 
-    print(prev_tracks_url)
-    print(next_tracks_url)
-    print(len(tracks))
     return render_template(
         'tracks/track_view.html',
-        #title=track.title,
-        #track_id=track.track_id,
         type=type1,
         id=id1,
         name_type=name,
@@ -174,10 +144,6 @@ def person_view():
         prev_tracks_url=prev_tracks_url,
         next_tracks_url=next_tracks_url,
     )
-
-
-
-
 
 
 @tracks_blueprint.route('/find', methods=['GET', 'POST'])
@@ -210,31 +176,6 @@ class SearchForm(FlaskForm):
     id = IntegerField("Enter ArtistID/AlbumID/GenreID", [DataRequired()])
     submit = SubmitField("Search")
 
-
-
-'''
-class SearchForm(FlaskForm):
-    # Task 6: Define the variables below using IntegerField and SubmitField
-    choices = [('Artist', 'Artist'),
-               ('Album', 'Album'),
-               ('Genre', 'Genre')]
-    select = SelectField('Search for music:', choices=choices)
-    id = IntegerField("Id No. of Artist, Genre, or Album", [DataRequired()])
-    submit = SubmitField("Search")
-'''
-'''
-
-class SearchForm(FlaskForm):
-    # Task 6: Define the variables below using IntegerField and SubmitField
-    choices = [('Artist', 'Artist'),
-               ('Album', 'Album'),
-               ('Genre', 'Genre')]
-    select = SelectField('Search for music:', choices=choices)
-    search = StringField('')
-
-'''
-
-
 @tracks_blueprint.route('/favourites')
 @login_required
 def playlist():
@@ -243,7 +184,6 @@ def playlist():
 
     if add_track_id is not None:
         track = services.get_track_by_id(int(add_track_id), repo.repo_instance)
-        #print(track.song_url)
         services.add_to_playlist(track, repo.repo_instance)
 
     if delete_track_id is not None:
@@ -298,7 +238,6 @@ def playlist():
             prev_tracks_url = url_for('tracks_bp.playlist', cursor=cursor - tracks_per_page)
         if cursor + tracks_per_page < len(tracks):
             next_tracks_url = url_for('tracks_bp.playlist', cursor=cursor + tracks_per_page)
-    #print(curr_iter_tracks)
     return render_template(
         'playlist.html',
         tracks=curr_iter_tracks,

@@ -76,8 +76,6 @@ class MemoryRepository(AbstractRepository):
         return self.__users
 
     def get_genre_collective(self, genre_id):
-        print(f"Here is the genre_index: \n {self.__genre_index}\n\n")
-        print(f"Here is the genre_to_track_dic: \n {self.__genre_to_track_dic}\n\n")
         return self.__genre_index, self.__genre_to_track_dic
 
     def get_artist_collective(self, artist_id):
@@ -238,7 +236,6 @@ def load_tracks(data_path: Path, repo: AbstractRepository, database_mode: bool):
         genres = row["track_genres"]
         if len(genres) > 0:
             genres = ast.literal_eval(genres)
-            # print("Test5")
             for genre in genres:
                 genre_id = int(genre["genre_id"])
                 genre_title = genre["genre_title"]

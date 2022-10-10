@@ -118,7 +118,7 @@ def test_saving_of_users(empty_session):
     empty_session.commit()
 
     rows = list(empty_session.execute('SELECT id, user_name, password FROM users'))
-    assert rows == [(1, "Tester123", "Tester123")]
+    assert rows == [(1, "tester123", "Tester123")]
 
 
 def test_saving_of_users_with_common_user_name(empty_session):
@@ -140,12 +140,30 @@ def test_loading_of_track(empty_session):
     assert track_key == fetched_track.track_id
 
 
+def test_saving_of_track(empty_session):
+    track = make_track()
+    empty_session.add(track)
+    empty_session.commit()
+
+    rows = list(empty_session.execute('SELECT id, title FROM tracks'))
+    assert rows == [(12, "tester")]
+
+
 def test_load_of_artist(empty_session):
     artist_key = insert_artist(empty_session)
     expected_artist = make_artist()
     fetched_artist = empty_session.query(Artist).one()
     assert expected_artist == fetched_artist
     assert artist_key[0] == fetched_artist.artist_id
+
+
+def test_saving_of_artist(empty_session):
+    artist = make_artist()
+    empty_session.add(artist)
+    empty_session.commit()
+
+    rows = list(empty_session.execute('SELECT id, full_name FROM artists'))
+    assert rows == [(12, "tester")]
 
 
 def test_load_of_album(empty_session):
@@ -157,6 +175,15 @@ def test_load_of_album(empty_session):
     assert album_key[0] == fetched_album.album_id
 
 
+def test_saving_of_album(empty_session):
+    album = make_album()
+    empty_session.add(album)
+    empty_session.commit()
+
+    rows = list(empty_session.execute("SELECT id, title FROM albums"))
+    assert rows == [(12, "tester")]
+
+
 def test_load_of_genre(empty_session):
     genre_key = insert_genres(empty_session)
     expected_genre = make_genre()
@@ -164,4 +191,3 @@ def test_load_of_genre(empty_session):
 
     assert expected_genre == fetched_genre
     assert genre_key[0] == fetched_genre.genre_id
-

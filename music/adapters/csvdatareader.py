@@ -52,7 +52,6 @@ def extract_genres(track_row: dict):
                     int(genre_dict['genre_id']), genre_dict['genre_title'])
                 genres.append(genre)
         except Exception as e:
-            print(track_genres_raw)
             print(f'Exception occurred while parsing genres: {e}')
 
     return genres
@@ -108,7 +107,7 @@ class TrackCSVReader:
                     row['album_id']) if row['album_id'].isdigit() else row['album_id']
                 if type(album_id) is not int:
                     print(f'Invalid album_id: {album_id}')
-                    print(row)
+
                     continue
                 album = create_album_object(row)
                 album_dict[album_id] = album
@@ -117,7 +116,6 @@ class TrackCSVReader:
 
     def read_tracks_file(self):
         if not os.path.exists(self.__tracks_csv_file):
-            print(f"path {self.__tracks_csv_file} does not exist!")
             return
         track_rows = []
         # encoding of unicode_escape is required to decode successfully

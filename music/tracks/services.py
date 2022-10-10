@@ -30,7 +30,7 @@ def get_first_track(repo: AbstractRepository):
 
 
 def get_tracks(repo: AbstractRepository):
-    tracks = repo.get_all_tracks()  # returns all tracks
+    tracks = repo.get_all_tracks()
     track_dto = list()
     prev_id = next_id = None
     if len(tracks) > 0:
@@ -61,7 +61,6 @@ def get_all_tracks(repo: AbstractRepository):
         next_track = repo.get_next_track(all_tracks[0])
 
     return all_tracks, prev_tracks, next_track
-    # return repo.get_all_tracks()
 
 
 def tracks_to_dict(tracks: Iterable[Track]):
@@ -103,13 +102,6 @@ def get_genre(genre_id, repo: AbstractRepository):
 def add_to_playlist(track, repo: AbstractRepository):
     repo.add_to_playlist(track)
 
-
-'''
-def add_to_playlist(track, repo: AbstractRepository):
-    pl = PlayList(int((session['user_id'])))
-    pl.track_id = track.track_id
-    repo.add_to_playlist(pl)
-'''
 
 def delete_from_playlist(track, repo: AbstractRepository):
     repo.delete_from_playlist(track)

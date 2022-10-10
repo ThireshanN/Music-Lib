@@ -31,27 +31,21 @@ def comment_on_article():
     # Obtain the user name of the currently logged in user.
     #user_name = session['user_name']
     track_id = request.args.get('track')
-    print(track_id)
-    print(type(track_id))
     #print(user_name)
     # Create form. The form maintains state, e.g. when this method is called with a HTTP GET request and populates
     # the form with an article id, when subsequently called with a HTTP POST request, the article id remains in the
     # form.
-    print("test1")
+
     form = CommentForm()
-    print("test2")
+
 
     if form.validate_on_submit():
-        print("test3")
-        print(form.track_id.data)
         # Use the service layer to store the new comment.
         services.add_comment(int(form.track_id.data), form.comment.data, int(form.rating.data),  repo.repo_instance)
-        print("test4")
         # Cause the web browser to display the page of all articles that have the same date as the commented article,
         # and display all comments, including the new comment.
         return redirect(url_for('comments_bp.comment_on_article', track=form.track_id.data))
         #return redirect(url_for('home_bp.home'))
-    print("test2a")
     if request.method == 'GET':
         # Request is a HTTP GET to display the form.
         # Extract the article id, representing the article to comment, from a query parameter of the GET request.
@@ -77,43 +71,26 @@ def comment_on_article():
         next_tracks_url = None
     else:
         comments = reviews[k]
-        #comments = rev_list.reverse()
-        print("test1")
-        print('test1/1')
-        '''
-        for ele in comments:
-            print(ele)
-        print("test2")
-        print(type(comments))
-        '''
+
         comment = comments[0]
-        print('test1/2')
         comments_per_page = 5
         cursor = request.args.get('cursor')
-        print('test1/3')
         if cursor is None:
             cursor = 0
         else:
             cursor = int(cursor)
-        print('test1/4')
         next_tracks_url = None
         prev_tracks_url = None
 
         prev_track = next_track = None
         if len(comments) > 0:
             try:
-                print('test1/5')
                 index = utilities.track_index_subclass(comment, comments)
-                print('test1/5')
                 for stored_track in reversed(comments[0:index]):
-                    print('test1/5')
                     if stored_track.track_id < track.track_id:
-                        print('test1/5')
                         prev_track = stored_track.track_id
-                        print('test1/5')
                         break
             except ValueError:
-                print("mem repo get prev track")
                 pass
 
             try:
@@ -123,7 +100,6 @@ def comment_on_article():
                         next_track = stored_track
                         break
             except ValueError:
-                print("mem repo get next track")
                 pass
         curr_iter_tracks = comments[cursor:cursor + comments_per_page]
 
@@ -131,7 +107,6 @@ def comment_on_article():
             prev_tracks_url = url_for('comments_bp.comment_on_article', track=track_id, cursor=cursor - comments_per_page)
         if cursor + comments_per_page < len(comments):
             next_tracks_url = url_for('comments_bp.comment_on_article', track=track_id, cursor=cursor + comments_per_page)
-    print('test1/6')
     return render_template(
         'tracks/track_comments.html',
         track_name=track.title,

@@ -47,7 +47,6 @@ def create_album_object(row):
     album = Album(album_id, row['album_title'])
     album.album_url = row['album_url']
     album.album_type = row['album_type']
-
     album.release_year = int(
         row['album_year_released']) if row['album_year_released'].isdigit() else None
 
@@ -69,7 +68,6 @@ def extract_genres(track_row: dict):
                     int(genre_dict['genre_id']), genre_dict['genre_title'])
                 genres.append(genre)
         except Exception as e:
-            print(track_genres_raw)
             print(f'Exception occurred while parsing genres: {e}')
 
     return genres
@@ -117,7 +115,6 @@ def load_tracks(data_path: Path, repo: AbstractRepository, database_mode: bool):
                 genre_id = int(genre["genre_id"])
                 genre_title = genre["genre_title"]
                 genre = Genre(genre_id, genre_title)
-                #print(f"adding genre {genre} to this track {new_track}")
                 new_track.add_genre(genre)
                 repo.add_genre(genre, new_track)
         new_track.genre_string = genre_string[1:]

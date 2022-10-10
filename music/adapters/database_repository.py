@@ -134,14 +134,6 @@ class SqlAlchemyRepository(AbstractRepository):
         return self._session_cm.session.query(User).all()
 
     def get_genre_collective(self, genre_id):
-        '''
-        genre_index = dict()
-        tracks = self._session_cm.session.query(Track).all()
-        for element in tracks:
-            genre_id = element.genres
-            print(genre_id)
-        return self.__genre_index, self.__genre_to_track_dic
-        '''
         tracks = self._session_cm.session.execute('SELECT id, genre_string  FROM tracks').all()
         genre_table = self._session_cm.session.execute('SELECT * FROM genres').all()
         genre_to_track_dic = dict()
@@ -158,7 +150,7 @@ class SqlAlchemyRepository(AbstractRepository):
                     else:
                         genre_to_track_dic[g_id] = [tk]
                 except ValueError:
-                    print("No Genres")
+                    pass
         for ele in genre_table:
             gen_id = int(ele[0])
             gen_name = str(ele[1])

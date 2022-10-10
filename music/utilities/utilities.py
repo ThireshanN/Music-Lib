@@ -19,11 +19,7 @@ def get_selected_tracks(quantity=15):
 
 
 def track_index_subclass(track1, track_list):
-    print('testA')
     index1 = bisect_left(track_list, track1)
-    print('testB')
     if index1 != len(track_list) and track_list[index1] == track1:
-        print('testC')
         return index1
-    print('testD')
     raise ValueError("in track index - mem repo")

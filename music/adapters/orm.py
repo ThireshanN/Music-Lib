@@ -54,7 +54,6 @@ genres_table = Table(
     Column("name", String(255), nullable=False)
 )
 
-# don't think we need this.
 tags_table = Table(
     "tags", metadata,
     Column('id', Integer, primary_key=True, autoincrement=True),
@@ -80,7 +79,6 @@ track_genre_table = Table(
 
 playlist_tracks_table = Table(
     'playlist_tracks', metadata,
-    #Column('id', Integer, primary_key=True, autoincrement=True),
     Column("playlist_id", ForeignKey("playlist.id")),
     Column('track_id', ForeignKey('tracks.id'))
 )
@@ -107,7 +105,7 @@ def map_model_to_tables():
             secondary=track_genre_table,
             back_populates='_Genre__tracks'),
         "_Track__genre_string": track_table.c.genre_string
-    })  # Don't think that genres are working correctly
+    })
 
     mapper(album.Album, album_table, properties={
         "_Album__album_id": album_table.c.id,
