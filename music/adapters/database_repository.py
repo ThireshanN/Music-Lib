@@ -129,21 +129,25 @@ class SqlAlchemyRepository(AbstractRepository):
         with self._session_cm as scm:
             scm.session.add(review)
             scm.commit()
-        print("post done")
 
     def get_all_users(self):
         return self._session_cm.session.query(User).all()
 
     def get_genre_collective(self, genre_id):
+        genre_index = dict()
+        tracks = self._session_cm.session.query(Track).all()
+        for element in tracks:
+            genre_id = element.genres
+            print(genre_id)
         return self.__genre_index, self.__genre_to_track_dic
 
     def get_artist_collective(self, artist_id):
         artist_index = dict()
         artist_to_track_dict = dict()
         tracks = self._session_cm.session.execute('SELECT * FROM tracks WHERE artist_id = :artist_id', {'artist_id':
-        artist_id}).all()
+                                                                                                            artist_id}).all()
         artists = self._session_cm.session.execute('SELECT * FROM artists WHERE id = :artist_id', {'artist_id':
-        artist_id}).all()
+                                                                                                       artist_id}).all()
         artist_name = ""
 
         for element in artists:
@@ -161,7 +165,7 @@ class SqlAlchemyRepository(AbstractRepository):
             artist_obj = Artist(a_id, artist_name)
             alb_id = int(element[3])
             album_row = self._session_cm.session.execute('SELECT * FROM albums WHERE id = :album_id',
-                                                          {'album_id': alb_id}).fetchone()
+                                                         {'album_id': alb_id}).fetchone()
             album_obj = Album(int(album_row[0]), str(album_row[1]))
             track_obj.artist = artist_obj
             track_obj.album = album_obj
@@ -176,9 +180,9 @@ class SqlAlchemyRepository(AbstractRepository):
         album_index = dict()
         album_to_track_dict = dict()
         tracks = self._session_cm.session.execute('SELECT * FROM tracks WHERE album_id = :album_id', {'album_id':
-        album_id}).all()
+                                                                                                          album_id}).all()
         albums = self._session_cm.session.execute('SELECT * FROM albums WHERE id = :album_id', {'album_id':
-        album_id}).all()
+                                                                                                    album_id}).all()
         album_name = ""
 
         for element in albums:
@@ -196,7 +200,7 @@ class SqlAlchemyRepository(AbstractRepository):
             album_obj = Album(a_id, album_name)
             art_id = int(element[2])
             artist_row = self._session_cm.session.execute('SELECT * FROM artists WHERE id = :album_id',
-                                                       {'album_id':art_id}).fetchone()
+                                                          {'album_id': art_id}).fetchone()
             artist_obj = Artist(int(artist_row[0]), str(artist_row[1]))
             track_obj.artist = artist_obj
             track_obj.album = album_obj
@@ -211,6 +215,8 @@ class SqlAlchemyRepository(AbstractRepository):
         with self._session_cm as scm:
             scm.session.merge(genre)
             scm.commit()
+
+        # below is the same implementation as the mem_repo <- not persistent
         if genre.genre_id in self.__genre_to_track_dic:
             self.__genre_to_track_dic[genre.genre_id].append(track)
         else:
@@ -222,12 +228,10 @@ class SqlAlchemyRepository(AbstractRepository):
             scm.session.merge(artist)
             scm.commit()
 
-
     def add_album(self, album: Album, track: Track):
         with self._session_cm as scm:
             scm.session.merge(album)
             scm.commit()
-
 
     def add_track(self, track: Track):
         with self._session_cm as scm:
@@ -253,8 +257,12 @@ class SqlAlchemyRepository(AbstractRepository):
         return track
 
     def get_last_track(self):
-        track = self._session_cm.session.query(Track).order_by(desc(Track._Track__track__id)).first()
+        track = self._session_cm.session.query(Track).order_by(desc(Track._Track__track_id)).first()
         return track
+
+    def get_genre_length(self):
+        genres = self._session_cm.session.query(Genre).all()
+        return len(genres)
 
     def get_previous_track(self, track: Track):  # Don't need
         pass

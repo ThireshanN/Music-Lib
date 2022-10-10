@@ -78,7 +78,7 @@ track_genre_table = Table(
 
 playlist_tracks_table = Table(
     'playlist_tracks', metadata,
-    Column('id', Integer, primary_key=True, autoincrement=True),
+    #Column('id', Integer, primary_key=True, autoincrement=True),
     Column("playlist_id", ForeignKey("playlist.id")),
     Column('track_id', ForeignKey('tracks.id'))
 )
@@ -146,3 +146,4 @@ def map_model_to_tables():
             secondary=playlist_tracks_table,
             back_populates='_Track__playlists_added_to')
     })
+

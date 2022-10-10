@@ -76,16 +76,14 @@ class MemoryRepository(AbstractRepository):
         return self.__users
 
     def get_genre_collective(self, genre_id):
+        print(f"Here is the genre_index: \n {self.__genre_index}\n\n")
+        print(f"Here is the genre_to_track_dic: \n {self.__genre_to_track_dic}\n\n")
         return self.__genre_index, self.__genre_to_track_dic
 
     def get_artist_collective(self, artist_id):
-        print(f"Here is the artist_index: \n {self.__artist_index}\n\n")
-        print(f"Here is the artist_to_track_dic: \n {self.__artist_to_track_dic}\n\n")
         return self.__artist_index, self.__artist_to_track_dic
 
     def get_album_collective(self, album_id):
-        print(f"Here is the album_index: \n {self.__album_index}\n\n")
-        print(f"Here is the album_to_track_dic: \n {self.__album_to_track_dic}\n\n")
         return self.__album_index, self.__album_to_track_dic
 
     def add_genre(self, genre: Genre, track: Track):
@@ -191,6 +189,9 @@ class MemoryRepository(AbstractRepository):
         if index != len(self.__tracks) and self.__tracks[index].track_id == track.track_id:
             return index
         raise ValueError("in track index - mem repo")
+
+    def get_genre_length(self):
+        return len(self.__genre_to_track_dic)
 
     def __iter__(self):
         self._current = 0

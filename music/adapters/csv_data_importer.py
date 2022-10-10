@@ -76,9 +76,9 @@ def extract_genres(track_row: dict):
 
 
 def load_tracks(data_path: Path, repo: AbstractRepository, database_mode: bool):
-    print("Getting to load tracks in the data_importer")
     track_reader = TrackCSVReader(str(data_path / "raw_albums_excerpt.csv"), str(data_path / "raw_tracks_excerpt.csv"))
     tracks = track_reader.read_tracks_file()
+
     for row in tracks:
         id = int(row["track_id"])
         title = row['track_title']
@@ -115,6 +115,7 @@ def load_tracks(data_path: Path, repo: AbstractRepository, database_mode: bool):
                 genre_id = int(genre["genre_id"])
                 genre_title = genre["genre_title"]
                 genre = Genre(genre_id, genre_title)
+                #print(f"adding genre {genre} to this track {new_track}")
                 new_track.add_genre(genre)
                 repo.add_genre(genre, new_track)
         repo.add_album(new_album, new_track)

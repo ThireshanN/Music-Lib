@@ -73,6 +73,9 @@ class AbstractRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
+    def get_genre_length(self):
+        raise NotImplementedError
+    @abc.abstractmethod
     def get_user(self, user_name) -> User:
         raise NotImplementedError
 
