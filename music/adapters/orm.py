@@ -77,7 +77,7 @@ track_genre_table = Table(
     Column('genre_id', ForeignKey('genres.id'))
 )
 
-<<<<<<< Updated upstream
+
 playlist_tracks_table = Table(
     'playlist_tracks', metadata,
     #Column('id', Integer, primary_key=True, autoincrement=True),
@@ -86,8 +86,7 @@ playlist_tracks_table = Table(
 )
 
 
-=======
->>>>>>> Stashed changes
+
 def map_model_to_tables():
     mapper(user.User, users_table, properties={
         '_User__user_id': users_table.c.id,
