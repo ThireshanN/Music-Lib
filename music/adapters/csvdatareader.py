@@ -151,7 +151,6 @@ class TrackCSVReader:
             track.album = album
 
 
-            # Populate datasets for Artist and Genre
             if artist not in self.__dataset_of_artists:
                 self.__dataset_of_artists.add(artist)
 
@@ -164,7 +163,6 @@ class TrackCSVReader:
 
             self.__dataset_of_tracks.append(track)
 
-# This is what i've been testing don't think its working
         if len(self.__dataset_of_tracks) != 0:
             for track in self.__dataset_of_tracks:
                 SqlAlchemyRepository.add_track(track)

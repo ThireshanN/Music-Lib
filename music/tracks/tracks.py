@@ -151,9 +151,6 @@ def find_person():
     form = SearchForm()
 
     if form.validate_on_submit():
-        print('test1')
-        print(form.id.data)
-        print(form.type.data)
         # TODO: Read id from the form and redirect to `people_blueprint.person_view`
         return redirect(
             url_for('tracks_bp.person_view', person_id=form.id.data, type=form.type.data)
